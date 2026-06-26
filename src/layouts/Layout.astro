@@ -1,5 +1,11 @@
 ---
 import "../styles/global.css";
+
+export interface Props {
+	siteTitle: string;
+}
+
+const { siteTitle } = Astro.props;
 ---
 
 <!doctype html>
@@ -19,7 +25,7 @@ import "../styles/global.css";
 			type="image/svg+xml"
 			media="(prefers-color-scheme: dark)"
 		/>
-		<title>Keaede Project - Let's make your next project a reality</title>
+		<title>{siteTitle}</title>
 	</head>
 	<body>
 		<slot />

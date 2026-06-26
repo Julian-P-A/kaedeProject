@@ -2,6 +2,10 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "prettier.documentSelectors": [ "**/*.astro" ],
+      "[astro]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      },
       "command": "./node_modules/.bin/astro dev",
       "name": "Development server",
       "request": "launch",
