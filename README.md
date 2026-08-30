@@ -1,46 +1,49 @@
-# Astro Starter Kit: Basics
+# Kaede Project
 
-```sh
-pnpm create astro@latest -- --template basics
+Bilingual (EN/ES) landing page for **Kaede Project**, a digital development company specializing in web development, AI, automation, and CRM/integrations.
+
+## Stack
+
+- [TanStack Start](https://tanstack.com/start) (React 19, file-based routing)
+- Vite
+- Tailwind CSS v4
+- Framer Motion
+
+No backend, no database, no CMS — a single static/SSR route with all copy centralized in `src/data/translations.ts`.
+
+## Getting started
+
+```bash
+bun install
+bun --bun run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+The site runs at `http://localhost:3000`.
 
-## 🚀 Project Structure
+## Build
 
-Inside of your Astro project, you'll see the following folders and files:
+```bash
+bun run build
+```
+
+Output is written to `.output/`. Preview it with:
+
+```bash
+npx vite preview
+```
+
+## Project structure
 
 ```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+src/
+  components/       Page sections (Header, Hero, Solutions, Projects, Footer, ...)
+  components/animations/  Reusable Framer Motion reveal primitives
+  context/          LanguageContext (EN/ES state)
+  data/translations.ts   All bilingual copy, single source of truth
+  routes/           TanStack Router routes (__root.tsx, index.tsx)
+public/             Static assets (favicons, project images, robots.txt, sitemap.xml)
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## i18n
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Language defaults to English and switches client-side (no reload) via the selector in the header. All copy lives in `translations.ts` — add a new key there for both `en` and `es` when adding content.
