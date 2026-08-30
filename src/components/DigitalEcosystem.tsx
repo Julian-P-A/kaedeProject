@@ -22,16 +22,16 @@ export function DigitalEcosystem() {
         />
 
         <div className="relative mt-16">
-          <LineReveal className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-border" />
-          <CursorAnimation points={points} />
+          <LineReveal className="absolute left-0 right-0 top-1/2 hidden h-px -translate-y-1/2 bg-border sm:block" />
+          <CursorAnimation points={points} className="pointer-events-none absolute z-20 hidden sm:block" />
 
-          <div className="relative flex justify-between">
+          <div className="relative grid grid-cols-2 justify-items-center gap-x-4 gap-y-10 sm:flex sm:justify-between sm:gap-0">
             {nodes.map((node, i) => (
-              <RiseReveal key={node.label} delay={i * 0.08} className="flex flex-1 flex-col items-center gap-3">
+              <RiseReveal key={node.label} delay={i * 0.08} className="flex flex-col items-center gap-3 sm:flex-1">
                 <span className="flex h-14 w-14 items-center justify-center rounded-2xl border border-border-strong bg-background text-xs font-semibold text-accent sm:h-16 sm:w-16">
                   {node.label.slice(0, 2).toUpperCase()}
                 </span>
-                <span className="text-xs font-medium text-foreground/80 sm:text-sm">{node.label}</span>
+                <span className="text-center text-xs font-medium text-foreground/80 sm:text-sm">{node.label}</span>
                 <span className="flex items-center gap-1.5 rounded-full border border-border px-2.5 py-1 text-[10px] uppercase tracking-[0.1em] text-positive">
                   <span className="h-1.5 w-1.5 rounded-full bg-positive" />
                   {node.status}
