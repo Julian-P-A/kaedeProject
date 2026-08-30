@@ -49,11 +49,19 @@ export const Route = createRootRoute({
       { rel: 'icon', type: 'image/svg+xml', href: '/favicon-dark.svg' },
       { rel: 'icon', type: 'image/svg+xml', media: '(prefers-color-scheme: light)', href: '/favicon-dark.svg' },
       { rel: 'icon', type: 'image/svg+xml', media: '(prefers-color-scheme: dark)', href: '/favicon-white.svg' },
-      { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-      { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
       {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap',
+        rel: 'preload',
+        as: 'font',
+        type: 'font/woff2',
+        href: '/fonts/manrope.woff2',
+        crossOrigin: 'anonymous',
+      },
+      {
+        rel: 'preload',
+        as: 'font',
+        type: 'font/woff2',
+        href: '/fonts/instrument-serif-italic.woff2',
+        crossOrigin: 'anonymous',
       },
       {
         rel: 'stylesheet',
