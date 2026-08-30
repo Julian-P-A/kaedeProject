@@ -5,9 +5,9 @@ import { WordsReveal } from '#/components/animations/WordsReveal'
 import type { ProjectId } from '#/data/translations'
 
 // TODO: swap in a real screenshot of this site once available.
-const PROJECT_IMAGES: Record<ProjectId, string | undefined> = {
-  fuego: '/project-fuego.webp',
-  celestina: '/project-celestina.jpg',
+const PROJECT_IMAGES: Record<ProjectId, { src: string; width: number; height: number } | undefined> = {
+  fuego: { src: '/project-fuego.webp', width: 900, height: 506 },
+  celestina: { src: '/project-celestina.webp', width: 900, height: 721 },
   leadgen: undefined,
 }
 
@@ -40,8 +40,12 @@ export function Projects() {
             <div className="relative flex h-48 items-center justify-center overflow-hidden bg-surface-2">
               {PROJECT_IMAGES[project.id] ? (
                 <img
-                  src={PROJECT_IMAGES[project.id]}
+                  src={PROJECT_IMAGES[project.id]!.src}
+                  width={PROJECT_IMAGES[project.id]!.width}
+                  height={PROJECT_IMAGES[project.id]!.height}
                   alt={project.name}
+                  loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 />
               ) : (
