@@ -1,9 +1,6 @@
-import { motion } from 'framer-motion'
 import { useLanguage } from '#/context/LanguageContext'
 import { WordsReveal } from '#/components/animations/WordsReveal'
 import { HeroDashboard } from '#/components/HeroDashboard'
-
-const easeOut = [0.16, 1, 0.3, 1] as const
 
 export function Hero() {
   const { t } = useLanguage()
@@ -13,14 +10,9 @@ export function Hero() {
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[600px] bg-[radial-gradient(ellipse_at_top,rgba(215,255,92,0.08),transparent_60%)]" />
 
       <div className="mx-auto max-w-5xl px-5 text-center sm:px-8">
-        <motion.p
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: easeOut }}
-          className="mb-6 inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-muted"
-        >
+        <p className="animate-fade-up mb-6 inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-muted">
           {t.hero.eyebrow}
-        </motion.p>
+        </p>
 
         <WordsReveal
           as="h1"
@@ -28,20 +20,18 @@ export function Hero() {
           className="text-balance font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl"
         />
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4, ease: easeOut }}
-          className="mx-auto mt-6 max-w-2xl text-balance text-base text-muted sm:text-lg"
+        {/* Plain CSS animation (not Framer Motion): this is the LCP element on
+            most viewports, so it must not wait on JS hydration to become visible. */}
+        <p
+          className="animate-fade-up mx-auto mt-6 max-w-2xl text-balance text-base text-muted sm:text-lg"
+          style={{ animationDelay: '150ms' }}
         >
           {t.hero.description}
-        </motion.p>
+        </p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.55, ease: easeOut }}
-          className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
+        <div
+          className="animate-fade-up mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
+          style={{ animationDelay: '250ms' }}
         >
           <a
             href="#contact"
@@ -55,7 +45,7 @@ export function Hero() {
           >
             {t.hero.ctaSecondary}
           </a>
-        </motion.div>
+        </div>
       </div>
 
       <div className="mt-16 px-5 sm:mt-20 sm:px-8">
