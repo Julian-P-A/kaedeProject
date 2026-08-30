@@ -134,7 +134,7 @@ export const translations: Record<Language, Translations> = {
       disclaimer: 'Illustrative interface — conceptual, not a live client dashboard.',
     },
     solutionsIntro: {
-      tag: '( 2 ) What we do',
+      tag: '( 1 ) What we do',
       title: 'Digital solutions built for real business *goals.*',
       description:
         'From websites to AI-powered platforms, we create digital experiences that connect brands with people, automate processes and drive measurable growth.',
@@ -213,7 +213,7 @@ export const translations: Record<Language, Translations> = {
       },
     ],
     webDev: {
-      tag: '( 6 ) Web Development',
+      tag: '( 2 ) Web Development',
       title: 'One web service. Built around what your business actually *needs.*',
       bestForLabel: 'Best for',
       options: [
@@ -269,7 +269,7 @@ export const translations: Record<Language, Translations> = {
       quote: 'Request a quote',
     },
     process: {
-      tag: '( 8 ) Process',
+      tag: '( 4 ) Process',
       title: 'Strategy, design and technology working *together.*',
       stages: [
         { number: '01', title: 'Discover' },
@@ -281,7 +281,7 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     capabilities: {
-      tag: '( 9 ) Capabilities',
+      tag: '( 5 ) Capabilities',
       items: [
         'Web Development',
         'Artificial Intelligence',
@@ -294,7 +294,7 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     projectsSection: {
-      tag: '( 3 ) Selected projects',
+      tag: '( 6 ) Selected projects',
       title: 'Real projects, real *scope.*',
       items: [
         {
@@ -320,13 +320,13 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     about: {
-      tag: '( 4 ) About',
+      tag: '( 7 ) About',
       statement:
         'We design and develop digital experiences that connect brands with people, drive measurable growth and turn business goals into real results.',
       supporting: 'From websites to intelligent business systems — we build it, you grow it.',
     },
     ecosystem: {
-      tag: '( 7 ) Connected Ecosystem',
+      tag: '( 3 ) Connected Ecosystem',
       title: 'Your digital ecosystem should work as *one* *system.*',
       nodes: [
         { label: 'Website', status: 'Live' },
@@ -337,7 +337,7 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     finalCta: {
-      tag: '( 5 ) Make the solution a reality',
+      tag: '( 8 ) Make the solution a reality',
       title: 'Your next digital solution *starts* *here.*',
       description: 'Let’s transform your idea into a functional, intelligent and growth-focused digital experience.',
       ctaPrimary: 'Let’s build it',
@@ -388,7 +388,7 @@ export const translations: Record<Language, Translations> = {
       disclaimer: 'Interfaz ilustrativa — conceptual, no es un dashboard real de cliente.',
     },
     solutionsIntro: {
-      tag: '( 2 ) Qué hacemos',
+      tag: '( 1 ) Qué hacemos',
       title: 'Soluciones digitales creadas para objetivos de negocio *reales.*',
       description:
         'Desde sitios web hasta plataformas impulsadas por IA, creamos experiencias digitales que conectan marcas con personas, automatizan procesos y generan crecimiento medible.',
@@ -467,7 +467,7 @@ export const translations: Record<Language, Translations> = {
       },
     ],
     webDev: {
-      tag: '( 6 ) Desarrollo Web',
+      tag: '( 2 ) Desarrollo Web',
       title: 'Un solo servicio web. Construido alrededor de lo que tu negocio realmente *necesita.*',
       bestForLabel: 'Ideal para',
       options: [
@@ -523,7 +523,7 @@ export const translations: Record<Language, Translations> = {
       quote: 'Solicitar cotización',
     },
     process: {
-      tag: '( 8 ) Proceso',
+      tag: '( 4 ) Proceso',
       title: 'Estrategia, diseño y tecnología trabajando *juntas.*',
       stages: [
         { number: '01', title: 'Descubrir' },
@@ -535,7 +535,7 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     capabilities: {
-      tag: '( 9 ) Capacidades',
+      tag: '( 5 ) Capacidades',
       items: [
         'Desarrollo Web',
         'Inteligencia Artificial',
@@ -548,7 +548,7 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     projectsSection: {
-      tag: '( 3 ) Proyectos seleccionados',
+      tag: '( 6 ) Proyectos seleccionados',
       title: 'Proyectos reales, alcance *real.*',
       items: [
         {
@@ -574,13 +574,13 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     about: {
-      tag: '( 4 ) Nosotros',
+      tag: '( 7 ) Nosotros',
       statement:
         'Diseñamos y desarrollamos experiencias digitales que conectan marcas con personas, generan crecimiento medible y convierten objetivos de negocio en resultados reales.',
       supporting: 'Desde sitios web hasta sistemas empresariales inteligentes — nosotros lo construimos, tú lo haces crecer.',
     },
     ecosystem: {
-      tag: '( 7 ) Ecosistema Conectado',
+      tag: '( 3 ) Ecosistema Conectado',
       title: 'Tu ecosistema digital debería funcionar como *un* *solo* *sistema.*',
       nodes: [
         { label: 'Sitio Web', status: 'Activo' },
@@ -591,7 +591,7 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     finalCta: {
-      tag: '( 5 ) Hagamos realidad la solución',
+      tag: '( 8 ) Hagamos realidad la solución',
       title: 'Tu próxima solución digital *empieza* *aquí.*',
       description: 'Transformemos tu idea en una experiencia digital funcional, inteligente y enfocada en el crecimiento.',
       ctaPrimary: 'Construyámoslo',
