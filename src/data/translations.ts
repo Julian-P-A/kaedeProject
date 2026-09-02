@@ -99,7 +99,7 @@ export interface Translations {
     bestForLabel: string
     options: WebDevOption[]
   }
-  pricing: { heading: string; note: string; quote: string }
+  pricing: { quote: string; diagnosticPrompt: string; diagnosticCta: string }
   process: { tag: string; title: string; stages: { number: string; title: string }[] }
   capabilities: { tag: string; items: string[] }
   projectsSection: { tag: string; title: string; items: Project[] }
@@ -314,9 +314,9 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     pricing: {
-      heading: 'Web development options',
-      note: 'Custom requirements may require a tailored scope.',
       quote: 'Request a quote',
+      diagnosticPrompt: "Not sure which option fits your project? Answer a few quick questions and we'll tell you what you need.",
+      diagnosticCta: 'Take the quick diagnostic',
     },
     process: {
       tag: '( 4 ) Process',
@@ -692,9 +692,10 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     pricing: {
-      heading: 'Opciones de desarrollo web',
-      note: 'Los requerimientos a medida pueden necesitar un alcance personalizado.',
       quote: 'Solicitar cotización',
+      diagnosticPrompt:
+        '¿No sabes qué opción se ajusta a tu proyecto? Responde unas preguntas rápidas y te decimos qué necesitas.',
+      diagnosticCta: 'Hacer diagnóstico rápido',
     },
     process: {
       tag: '( 4 ) Proceso',

@@ -1,12 +1,11 @@
-import { useState } from 'react'
 import { useLanguage } from '#/context/LanguageContext'
+import { useDiagnostic } from '#/context/DiagnosticContext'
 import { RiseReveal } from '#/components/animations/Reveal'
 import { WordsReveal } from '#/components/animations/WordsReveal'
-import { Diagnostic } from '#/components/Diagnostic'
 
 export function FinalCTA() {
   const { t } = useLanguage()
-  const [diagnosticOpen, setDiagnosticOpen] = useState(false)
+  const { openDiagnostic } = useDiagnostic()
 
   return (
     <section id="contact" className="mx-auto max-w-5xl scroll-mt-28 px-5 py-24 text-center sm:px-8 sm:py-32">
@@ -38,14 +37,12 @@ export function FinalCTA() {
         </a>
         <button
           type="button"
-          onClick={() => setDiagnosticOpen(true)}
+          onClick={openDiagnostic}
           className="w-full rounded-full border border-border-strong px-7 py-3.5 text-sm font-medium text-foreground transition hover:bg-white/5 sm:w-auto"
         >
           {t.finalCta.ctaSecondary}
         </button>
       </RiseReveal>
-
-      <Diagnostic open={diagnosticOpen} onClose={() => setDiagnosticOpen(false)} />
     </section>
   )
 }

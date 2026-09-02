@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useLanguage } from '#/context/LanguageContext'
+import { useDiagnostic } from '#/context/DiagnosticContext'
 import { RiseReveal } from '#/components/animations/Reveal'
 import { WordsReveal } from '#/components/animations/WordsReveal'
 
@@ -71,23 +72,19 @@ export function WebDevelopment() {
 
 function PricingSummary() {
   const { t } = useLanguage()
+  const { openDiagnostic } = useDiagnostic()
 
   return (
     <RiseReveal delay={0.1} className="mt-10 overflow-hidden rounded-3xl bg-beige text-beige-foreground">
-      <div className="flex flex-col gap-8 p-8 sm:p-10 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <h3 className="font-display text-2xl font-semibold tracking-tight">{t.pricing.heading}</h3>
-          <p className="mt-2 max-w-md text-sm text-beige-foreground/70">{t.pricing.note}</p>
-        </div>
-
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-4">
-          {t.webDev.options.map((option) => (
-            <div key={option.name}>
-              <p className="text-xs uppercase tracking-[0.12em] text-beige-foreground/60">{option.name}</p>
-              <p className="mt-1 font-display text-lg font-semibold">{option.price}</p>
-            </div>
-          ))}
-        </div>
+      <div className="flex flex-col items-center gap-4 p-8 text-center sm:flex-row sm:justify-between sm:p-10 sm:text-left">
+        <p className="max-w-md text-sm text-beige-foreground/70">{t.pricing.diagnosticPrompt}</p>
+        <button
+          type="button"
+          onClick={openDiagnostic}
+          className="w-full shrink-0 rounded-full bg-accent px-6 py-3 text-sm font-medium text-accent-foreground transition hover:brightness-95 sm:w-auto"
+        >
+          {t.pricing.diagnosticCta}
+        </button>
       </div>
     </RiseReveal>
   )

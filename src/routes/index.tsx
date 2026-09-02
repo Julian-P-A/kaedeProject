@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import { useLanguage } from '#/context/LanguageContext'
+import { DiagnosticProvider } from '#/context/DiagnosticContext'
 import { Header } from '#/components/Header'
 import { Hero } from '#/components/Hero'
 import { Solutions } from '#/components/Solutions'
@@ -20,22 +21,24 @@ function Home() {
   useDocumentMeta()
 
   return (
-    <div className="bg-background">
-      <Header />
-      <main>
-        <Hero />
-        <Solutions />
-        <ServiceCards />
-        <WebDevelopment />
-        <DigitalEcosystem />
-        <Process />
-        <Capabilities />
-        <Projects />
-        <About />
-        <FinalCTA />
-      </main>
-      <Footer />
-    </div>
+    <DiagnosticProvider>
+      <div className="bg-background">
+        <Header />
+        <main>
+          <Hero />
+          <Solutions />
+          <ServiceCards />
+          <WebDevelopment />
+          <DigitalEcosystem />
+          <Process />
+          <Capabilities />
+          <Projects />
+          <About />
+          <FinalCTA />
+        </main>
+        <Footer />
+      </div>
+    </DiagnosticProvider>
   )
 }
 

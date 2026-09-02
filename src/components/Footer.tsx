@@ -2,12 +2,12 @@ import { FaLinkedinIn } from 'react-icons/fa'
 import { SiBehance, SiInstagram, SiTiktok } from 'react-icons/si'
 import { useLanguage } from '#/context/LanguageContext'
 
-// TODO: replace with the real profile URLs before launch.
+// TODO: TikTok profile URL not provided yet — replace before launch.
 const SOCIAL_LINKS = [
-  { label: 'LinkedIn', href: '#', Icon: FaLinkedinIn },
-  { label: 'Instagram', href: '#', Icon: SiInstagram },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/kaedeproject/', Icon: FaLinkedinIn },
+  { label: 'Instagram', href: 'https://www.instagram.com/kaedeproject_/', Icon: SiInstagram },
   { label: 'TikTok', href: '#', Icon: SiTiktok },
-  { label: 'Behance', href: '#', Icon: SiBehance },
+  { label: 'Behance', href: 'https://www.behance.net/KaedeProjectCol', Icon: SiBehance },
 ]
 
 export function Footer() {
