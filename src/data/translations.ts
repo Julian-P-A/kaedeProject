@@ -640,7 +640,7 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'landing',
           name: 'Landing Page',
-          price: '300 USD',
+          price: '900.000 COP',
           description:
             'Una experiencia digital enfocada, diseñada para presentar tu oferta, capturar leads y convertir tráfico en oportunidades.',
           bestFor: ['Campañas', 'Lanzamientos de producto', 'Promociones de servicios', 'Generación de leads'],
@@ -651,7 +651,7 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'corporate',
           name: 'Sitio Corporativo',
-          price: '450 USD',
+          price: "1'400.000 COP",
           description:
             'Un sitio web profesional diseñado para posicionar tu marca, comunicar tu valor y generar confianza con tus clientes.',
           bestFor: ['Empresas', 'Agencias', 'Marcas en crecimiento', 'Instituciones'],
@@ -662,7 +662,7 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'ecommerce',
           name: 'E-commerce',
-          price: '600 USD',
+          price: "1'900.000 COP",
           description:
             'Una tienda online escalable diseñada para mostrar productos, simplificar las compras y potenciar tus ventas digitales.',
           bestFor: ['Marcas de retail', 'Catálogos de producto', 'Marcas de belleza', 'Negocios basados en productos'],
