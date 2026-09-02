@@ -27,6 +27,27 @@ interface WebDevOption {
   description: string
   bestFor: string[]
   cta: string
+  whatsappUrl: string
+}
+
+export type DiagnosticResultId =
+  | 'ecosystemRobust'
+  | 'conversionUrgency'
+  | 'leadMachine'
+  | 'perceptionGap'
+  | 'authorityPositioning'
+  | 'operationalBottleneck'
+  | 'exploratory'
+  | 'strategicLaunch'
+
+interface DiagnosticQuestion {
+  question: string
+  options: string[]
+}
+
+interface DiagnosticResult {
+  title: string
+  description: string
 }
 
 interface EcosystemNode {
@@ -52,6 +73,7 @@ export interface Translations {
     description: string
     ctaPrimary: string
     ctaSecondary: string
+    whatsappUrl: string
   }
   dashboard: {
     barTitle: string
@@ -91,6 +113,24 @@ export interface Translations {
     ctaSecondary: string
   }
   footer: { copyright: string; secondary: string }
+  diagnostic: {
+    title: string
+    questionLabel: string
+    questions: DiagnosticQuestion[]
+    contact: {
+      title: string
+      description: string
+      emailLabel: string
+      emailPlaceholder: string
+      phoneLabel: string
+      phonePlaceholder: string
+      submit: string
+      error: string
+    }
+    nav: { next: string; back: string; close: string }
+    results: Record<DiagnosticResultId, DiagnosticResult>
+    finalMessage: string
+  }
 }
 
 export const translations: Record<Language, Translations> = {
@@ -102,10 +142,10 @@ export const translations: Record<Language, Translations> = {
     },
     nav: {
       links: [
-        { label: 'Projects', href: '#projects' },
         { label: 'Solutions', href: '#solutions' },
-        { label: 'About', href: '#about' },
         { label: 'Pricing', href: '#pricing' },
+        { label: 'Projects', href: '#projects' },
+        { label: 'About', href: '#about' },
         { label: 'Contact', href: '#contact' },
       ],
       cta: 'Start a project',
@@ -117,6 +157,8 @@ export const translations: Record<Language, Translations> = {
         'We design and build digital solutions powered by strategy, technology and AI to help your business grow faster.',
       ctaPrimary: 'Start your project',
       ctaSecondary: 'Explore solutions',
+      whatsappUrl:
+        'https://wa.me/573151883229?text=Hello.%20I%20am%20ready%20to%20start%20a%20project%20with%20you.%20What%20are%20the%20next%20steps%3F',
     },
     dashboard: {
       barTitle: 'Kaede Operations',
@@ -225,6 +267,8 @@ export const translations: Record<Language, Translations> = {
             'A focused digital experience designed to present your offer, capture leads and turn traffic into opportunities.',
           bestFor: ['Campaigns', 'Product launches', 'Service promotions', 'Lead generation'],
           cta: 'Launch my landing page',
+          whatsappUrl:
+            'https://wa.me/573151883229?text=Hello.%20I%20am%20interested%20in%20the%20Landing%20Page%20plan.%20I%20want%20to%20know%20the%20steps%20to%20start.',
         },
         {
           id: 'corporate',
@@ -234,6 +278,8 @@ export const translations: Record<Language, Translations> = {
             'A professional website designed to position your brand, communicate your value and create trust with clients.',
           bestFor: ['Companies', 'Agencies', 'Growing brands', 'Institutions'],
           cta: 'Build my website',
+          whatsappUrl:
+            'https://wa.me/573151883229?text=Hello.%20I%20want%20to%20build%20a%20Corporate%20Website%20with%20you.%20I%20would%20like%20to%20discuss%20the%20details.',
         },
         {
           id: 'ecommerce',
@@ -243,6 +289,8 @@ export const translations: Record<Language, Translations> = {
             'A scalable online store designed to showcase products, simplify purchases and support your digital sales.',
           bestFor: ['Retail brands', 'Product catalogs', 'Beauty brands', 'Product-based businesses'],
           cta: 'Create my online store',
+          whatsappUrl:
+            'https://wa.me/573151883229?text=Hello.%20I%20am%20looking%20to%20create%20an%20online%20store%20(E-commerce).%20Can%20we%20schedule%20a%20meeting%20to%20start%3F',
         },
         {
           id: 'custom',
@@ -260,6 +308,8 @@ export const translations: Record<Language, Translations> = {
             'Complex digital platforms',
           ],
           cta: 'Request a quote',
+          whatsappUrl:
+            'https://wa.me/573151883229?text=Hello.%20I%20want%20to%20transform%20my%20idea%20into%20a%20digital%20solution%20with%20Kaede%20Project.%20How%20can%20we%20start%3F',
         },
       ],
     },
@@ -347,6 +397,120 @@ export const translations: Record<Language, Translations> = {
       copyright: '© 2026 Kaede Project. All rights reserved.',
       secondary: 'Designed and built by Kaede Project.',
     },
+    diagnostic: {
+      title: 'Quick diagnosis',
+      questionLabel: 'Question',
+      questions: [
+        {
+          question: 'What is the main function your website needs to fulfill?',
+          options: [
+            'Sell products or subscriptions',
+            'Capture leads or book appointments',
+            'Showcase a portfolio or corporate presentation',
+            'Custom platform or complex system',
+            'Other',
+          ],
+        },
+        {
+          question: "What is your business's biggest digital obstacle today?",
+          options: [
+            "I don't have a professional presence online",
+            "I have a website, but it doesn't attract clients or sales",
+            "My current image doesn't reflect the quality of my work",
+            'I lose a lot of time on manual processes',
+            "I'm not sure, I need a diagnosis",
+          ],
+        },
+        {
+          question: "What state is your brand's design and content in?",
+          options: [
+            'I have a brand manual, references and copy',
+            'I have a basic logo, but I need web design and copy',
+            'I need to build everything from scratch',
+          ],
+        },
+        {
+          question: 'Which metric would you like to improve first?',
+          options: ['More leads', 'Automated sales', 'Premium positioning', 'Save operational time'],
+        },
+        {
+          question: 'What size do you estimate for this project?',
+          options: [
+            'Landing page',
+            'Corporate website with 2 to 5 pages',
+            'Robust platform / +6 pages / large store',
+            "I'm not sure",
+          ],
+        },
+        {
+          question: "What's the main action you want your clients to take?",
+          options: [
+            'Buy',
+            'Sign up / leave their details',
+            'Learn about the company, validate experience and get in touch',
+            'A combination or something specific',
+          ],
+        },
+        {
+          question: 'How long has your business been active?',
+          options: ['About to launch', 'Less than 1 year', '1 to 3 years', 'More than 3 years'],
+        },
+      ],
+      contact: {
+        title: 'One last step',
+        description: 'Leave us your details so we can send your diagnosis and coordinate next steps.',
+        emailLabel: 'Email',
+        emailPlaceholder: 'you@email.com',
+        phoneLabel: 'Phone number',
+        phonePlaceholder: '+1 000 000 0000',
+        submit: 'See my diagnosis',
+        error: 'Please enter a valid email and phone number.',
+      },
+      nav: { next: 'Next', back: 'Back', close: 'Close' },
+      results: {
+        ecosystemRobust: {
+          title: 'Robust Ecosystem / E-commerce',
+          description:
+            'Your project is about selling, scaling and connecting multiple processes. You need a robust platform built to support real growth.',
+        },
+        conversionUrgency: {
+          title: 'Conversion Urgency',
+          description:
+            "You already have a digital presence, but it isn't producing results. The focus should be on optimizing conversion, not starting from zero.",
+        },
+        leadMachine: {
+          title: 'Lead-Generation Machine / Landing Page',
+          description:
+            'You need a landing page focused entirely on capturing leads and turning traffic into real opportunities.',
+        },
+        perceptionGap: {
+          title: 'Perception Gap',
+          description:
+            "Your experience and quality aren't reflected in your current digital image. You need a presence that backs up your work.",
+        },
+        authorityPositioning: {
+          title: 'Authority & Positioning',
+          description:
+            'You want to showcase your portfolio and strengthen your brand with a corporate website that conveys authority.',
+        },
+        operationalBottleneck: {
+          title: 'Operational Bottleneck',
+          description:
+            "You're losing valuable time on manual processes. You need a custom solution that automates your operation.",
+        },
+        exploratory: {
+          title: 'Exploratory',
+          description:
+            "You're still defining the direction of your project. We'll help you build the strategy and the brand from scratch.",
+        },
+        strategicLaunch: {
+          title: 'Strategic Launch',
+          description:
+            "You're about to launch or just getting started. The ideal moment to build a professional digital presence from day one.",
+        },
+      },
+      finalMessage: 'You will receive a call from our team shortly.',
+    },
   },
   es: {
     seo: {
@@ -356,10 +520,10 @@ export const translations: Record<Language, Translations> = {
     },
     nav: {
       links: [
-        { label: 'Proyectos', href: '#projects' },
         { label: 'Soluciones', href: '#solutions' },
-        { label: 'Nosotros', href: '#about' },
         { label: 'Precios', href: '#pricing' },
+        { label: 'Proyectos', href: '#projects' },
+        { label: 'Nosotros', href: '#about' },
         { label: 'Contacto', href: '#contact' },
       ],
       cta: 'Iniciar un proyecto',
@@ -371,6 +535,8 @@ export const translations: Record<Language, Translations> = {
         'Diseñamos y desarrollamos soluciones digitales impulsadas por estrategia, tecnología e IA para ayudar a tu negocio a crecer más rápido.',
       ctaPrimary: 'Inicia tu proyecto',
       ctaSecondary: 'Explorar soluciones',
+      whatsappUrl:
+        'https://wa.me/573151883229?text=Hola.%20Estoy%20listo%20para%20iniciar%20un%20proyecto%20con%20ustedes.%20%C2%BFCu%C3%A1les%20son%20los%20siguientes%20pasos%3F',
     },
     dashboard: {
       barTitle: 'Kaede Operations',
@@ -479,6 +645,8 @@ export const translations: Record<Language, Translations> = {
             'Una experiencia digital enfocada, diseñada para presentar tu oferta, capturar leads y convertir tráfico en oportunidades.',
           bestFor: ['Campañas', 'Lanzamientos de producto', 'Promociones de servicios', 'Generación de leads'],
           cta: 'Crear mi landing page',
+          whatsappUrl:
+            'https://wa.me/573151883229?text=Hola.%20Me%20interesa%20el%20plan%20de%20Landing%20Page.%20Quiero%20conocer%20los%20pasos%20para%20empezar.',
         },
         {
           id: 'corporate',
@@ -488,6 +656,8 @@ export const translations: Record<Language, Translations> = {
             'Un sitio web profesional diseñado para posicionar tu marca, comunicar tu valor y generar confianza con tus clientes.',
           bestFor: ['Empresas', 'Agencias', 'Marcas en crecimiento', 'Instituciones'],
           cta: 'Crear mi sitio web',
+          whatsappUrl:
+            'https://wa.me/573151883229?text=Hola.%20Quiero%20desarrollar%20un%20Sitio%20Web%20Corporativo%20con%20ustedes.%20Me%20gustar%C3%ADa%20discutir%20los%20detalles.',
         },
         {
           id: 'ecommerce',
@@ -497,6 +667,8 @@ export const translations: Record<Language, Translations> = {
             'Una tienda online escalable diseñada para mostrar productos, simplificar las compras y potenciar tus ventas digitales.',
           bestFor: ['Marcas de retail', 'Catálogos de producto', 'Marcas de belleza', 'Negocios basados en productos'],
           cta: 'Crear mi tienda online',
+          whatsappUrl:
+            'https://wa.me/573151883229?text=Hola.%20Busco%20crear%20una%20tienda%20en%20l%C3%ADnea%20(E-commerce).%20%C2%BFPodemos%20agendar%20una%20reuni%C3%B3n%20para%20iniciar%3F',
         },
         {
           id: 'custom',
@@ -514,6 +686,8 @@ export const translations: Record<Language, Translations> = {
             'Plataformas digitales complejas',
           ],
           cta: 'Solicitar cotización',
+          whatsappUrl:
+            'https://wa.me/573151883229?text=Hola.%20Quiero%20transformar%20mi%20idea%20en%20una%20soluci%C3%B3n%20digital%20con%20Kaede%20Project.%20%C2%BFC%C3%B3mo%20podemos%20empezar%3F',
         },
       ],
     },
@@ -600,6 +774,120 @@ export const translations: Record<Language, Translations> = {
     footer: {
       copyright: '© 2026 Kaede Project. Todos los derechos reservados.',
       secondary: 'Diseñado y desarrollado por Kaede Project.',
+    },
+    diagnostic: {
+      title: 'Diagnóstico rápido',
+      questionLabel: 'Pregunta',
+      questions: [
+        {
+          question: '¿Cuál es la función principal que debe cumplir tu sitio web?',
+          options: [
+            'Vender productos o suscripciones',
+            'Captar clientes potenciales o agendar citas',
+            'Mostrar un portafolio o presentación corporativa',
+            'Plataforma o sistema complejo a medida',
+            'Otra',
+          ],
+        },
+        {
+          question: '¿Cuál es el mayor obstáculo digital de tu negocio hoy?',
+          options: [
+            'No existo en internet de forma profesional',
+            'Tengo una web, pero no atrae clientes ni ventas',
+            'Mi imagen actual no refleja la calidad de mi trabajo',
+            'Pierdo mucho tiempo en procesos manuales',
+            'No estoy seguro, necesito un diagnóstico',
+          ],
+        },
+        {
+          question: '¿En qué estado se encuentra el diseño y contenido de tu marca?',
+          options: [
+            'Tengo manual de marca, referencias y textos',
+            'Tengo logo básico, pero necesito diseño web y textos',
+            'Necesito construir todo desde cero',
+          ],
+        },
+        {
+          question: '¿Qué métrica te gustaría mejorar primero?',
+          options: ['Más leads', 'Ventas automatizadas', 'Posicionamiento premium', 'Ahorrar tiempo operativo'],
+        },
+        {
+          question: '¿Qué tamaño estimas para este proyecto?',
+          options: [
+            'Landing page',
+            'Web corporativa de 2 a 5 páginas',
+            'Plataforma robusta / +6 páginas / tienda grande',
+            'No estoy seguro',
+          ],
+        },
+        {
+          question: '¿Cuál es la acción principal que quieres que tus clientes hagan?',
+          options: [
+            'Comprar',
+            'Registrarse/dejar sus datos',
+            'Conocer la empresa, validar experiencia y contactar',
+            'Combinación o algo específico',
+          ],
+        },
+        {
+          question: '¿Cuánto tiempo lleva activo tu negocio?',
+          options: ['A punto de lanzarse', 'Menos de 1 año', '1 a 3 años', 'Más de 3 años'],
+        },
+      ],
+      contact: {
+        title: 'Un último paso',
+        description: 'Déjanos tus datos para enviarte el diagnóstico y coordinar los siguientes pasos.',
+        emailLabel: 'Correo electrónico',
+        emailPlaceholder: 'tucorreo@email.com',
+        phoneLabel: 'Número telefónico',
+        phonePlaceholder: '+57 300 000 0000',
+        submit: 'Ver mi diagnóstico',
+        error: 'Por favor completa un correo y teléfono válidos.',
+      },
+      nav: { next: 'Siguiente', back: 'Atrás', close: 'Cerrar' },
+      results: {
+        ecosystemRobust: {
+          title: 'Ecosistema Robusto / E-commerce',
+          description:
+            'Tu proyecto apunta a vender, escalar y conectar múltiples procesos. Necesitas una plataforma robusta que soporte un crecimiento real.',
+        },
+        conversionUrgency: {
+          title: 'Urgencia de Conversión',
+          description:
+            'Ya tienes presencia digital, pero no está generando resultados. El foco debe estar en optimizar la conversión, no en empezar de cero.',
+        },
+        leadMachine: {
+          title: 'Máquina de Captación / Landing Page',
+          description:
+            'Necesitas una landing page enfocada 100% en captar leads y convertir tráfico en oportunidades reales.',
+        },
+        perceptionGap: {
+          title: 'Brecha de Percepción',
+          description:
+            'Tu experiencia y calidad no se están reflejando en tu imagen digital actual. Necesitas una presencia que respalde tu trabajo.',
+        },
+        authorityPositioning: {
+          title: 'Autoridad y Posicionamiento',
+          description:
+            'Buscas mostrar tu portafolio y consolidar tu marca con una web corporativa que transmita autoridad.',
+        },
+        operationalBottleneck: {
+          title: 'Cuello de Botella Operativo',
+          description:
+            'Estás perdiendo tiempo valioso en procesos manuales. Necesitas una solución a medida que automatice tu operación.',
+        },
+        exploratory: {
+          title: 'Exploratorio',
+          description:
+            'Todavía estás definiendo el rumbo de tu proyecto. Te ayudamos a construir la estrategia y la marca desde cero.',
+        },
+        strategicLaunch: {
+          title: 'Lanzamiento Estratégico',
+          description:
+            'Estás por lanzarte o apenas empezando. Es el momento ideal para construir una presencia digital profesional desde el día uno.',
+        },
+      },
+      finalMessage: 'En breve recibirá una llamada de nuestro equipo',
     },
   },
 }

@@ -53,7 +53,9 @@ export function WebDevelopment() {
             </div>
 
             <a
-              href="#contact"
+              href={option.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="mt-8 block w-full rounded-full border border-border-strong px-4 py-3 text-center text-sm font-medium text-foreground transition hover:bg-white/5"
             >
               {option.cta}

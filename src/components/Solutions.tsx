@@ -7,7 +7,7 @@ export function Solutions() {
   const { t } = useLanguage()
 
   return (
-    <section id="solutions" className="mx-auto max-w-7xl px-5 py-24 sm:px-8 sm:py-32">
+    <section id="solutions" className="mx-auto max-w-7xl scroll-mt-28 px-5 py-24 sm:px-8 sm:py-32">
       <RiseReveal className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-accent">
         {t.solutionsIntro.tag}
       </RiseReveal>

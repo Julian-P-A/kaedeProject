@@ -72,6 +72,7 @@ body,
 html {
   background: var(--color-background);
   color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 body {

@@ -34,7 +34,9 @@ export function Hero() {
           style={{ animationDelay: '250ms' }}
         >
           <a
-            href="#contact"
+            href={t.hero.whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             className="w-full rounded-full bg-accent px-7 py-3.5 text-sm font-medium text-accent-foreground transition hover:brightness-95 sm:w-auto"
           >
             {t.hero.ctaPrimary}
