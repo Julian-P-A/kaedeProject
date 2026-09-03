@@ -12,10 +12,12 @@ const PHONE_PATTERN = /^[+\d][\d\s-]{6,}$/
 
 type Step = number // 0..6 questions, 7 contact, 8 result
 
-// Public by design (Web3Forms access keys are meant to be embedded client-side).
-// Delivery inbox is whatever email is registered against this key on web3forms.com,
-// not something this code controls.
-const WEB3FORMS_ACCESS_KEY = '***REMOVED-WEB3FORMS-ACCESS-KEY***'
+// Public by design (Web3Forms access keys are meant to be embedded client-side —
+// it still ships inside the browser bundle regardless of where it's sourced from).
+// Read from .env (see .env.example) purely to keep the raw value out of source
+// control, not as a security boundary. Delivery inbox is whatever email is
+// registered against this key on web3forms.com, not something this code controls.
+const WEB3FORMS_ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY as string
 
 /**
  * Sends the completed diagnosis straight from the browser via Web3Forms — no
@@ -40,6 +42,7 @@ async function submitDiagnosticLead(payload: {
         email: payload.email,
         phone: payload.phone,
         result: payload.resultTitle,
+        botcheck: false, // Web3Forms honeypot field — must stay empty/false for a real submission
         ...Object.fromEntries(payload.answerLabels.map((label, i) => [`question_${i + 1}`, label])),
       }),
     })
