@@ -402,7 +402,7 @@ export const translations: Record<Language, Translations> = {
     },
     faq: {
       tag: '( 8 ) Frequently asked questions',
-      title: 'Answers before you *ask.*',
+      title: 'Everything you need to know before you *start.*',
       items: [
         {
           question: 'How much does a website cost?',
@@ -432,7 +432,7 @@ export const translations: Record<Language, Translations> = {
         {
           question: 'How do I start a project with Kaede Project?',
           answer:
-            'Write to us on WhatsApp or take the quick diagnostic on this page. We then go through Discover, Define, Design, Build, Connect and Launch, and confirm scope and timeline in a quote before we start.',
+            'Write to us on WhatsApp or take the quick diagnostic on this page. We work in stages (Discover, Define, Design, Build, Connect and Launch) and, before we start, send you a quote with the scope and timeline.',
         },
       ],
     },
@@ -822,7 +822,7 @@ export const translations: Record<Language, Translations> = {
     },
     faq: {
       tag: '( 8 ) Preguntas frecuentes',
-      title: 'Respuestas antes de que *preguntes.*',
+      title: 'Todo lo que necesitas saber antes de *empezar.*',
       items: [
         {
           question: '¿Cuánto cuesta una página web?',
@@ -852,7 +852,7 @@ export const translations: Record<Language, Translations> = {
         {
           question: '¿Cómo inicio un proyecto con Kaede Project?',
           answer:
-            'Escríbenos por WhatsApp o haz el diagnóstico rápido en esta página. Después recorremos Descubrir, Definir, Diseñar, Desarrollar, Conectar y Lanzar, y confirmamos alcance y tiempos en una cotización antes de empezar.',
+            'Escríbenos por WhatsApp o haz el diagnóstico rápido de esta página. Trabajamos por etapas (descubrir, definir, diseñar, desarrollar, conectar y lanzar) y, antes de empezar, te enviamos una cotización con el alcance y los tiempos.',
         },
       ],
     },
