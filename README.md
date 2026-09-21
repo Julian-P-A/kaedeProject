@@ -38,7 +38,7 @@ npx vite preview
 src/
   components/       Page sections (Header, Hero, Solutions, Projects, Footer, ...)
   components/animations/  Reusable Framer Motion reveal primitives
-  context/          LanguageContext (EN/ES state)
+  context/          LanguageContext (language taken from the URL)
   data/translations.ts   All bilingual copy, single source of truth
   routes/           TanStack Router routes (__root.tsx, index.tsx)
 public/             Static assets (favicons, project images, robots.txt, sitemap.xml)
@@ -46,4 +46,4 @@ public/             Static assets (favicons, project images, robots.txt, sitemap
 
 ## i18n
 
-Language defaults to English and switches client-side (no reload) via the selector in the header. All copy lives in `translations.ts` — add a new key there for both `en` and `es` when adding content.
+Each language has its own URL (`/en`, `/es`) with `canonical` and `hreflang` tags, and the header selector links between them. `/` is the `hreflang` x-default: it redirects to the language in the browser's `Accept-Language` header (English if none matches). SEO tags and JSON-LD (Organization, Service, FAQPage) are built per language in `src/lib/seo.ts`; `public/` holds `robots.txt` (AI crawlers allowed), `sitemap.xml` and `llms.txt`. All copy lives in `translations.ts` — add a new key there for both `en` and `es` when adding content.

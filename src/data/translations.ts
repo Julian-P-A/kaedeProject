@@ -112,6 +112,7 @@ export interface Translations {
     ctaPrimary: string
     ctaSecondary: string
   }
+  faq: { tag: string; title: string; items: { question: string; answer: string }[] }
   footer: { copyright: string; secondary: string }
   diagnostic: {
     title: string
@@ -387,11 +388,47 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     finalCta: {
-      tag: '( 8 ) Make the solution a reality',
+      tag: '( 9 ) Make the solution a reality',
       title: 'Your next digital solution *starts* *here.*',
       description: 'Let’s transform your idea into a functional, intelligent and growth-focused digital experience.',
       ctaPrimary: 'Let’s build it',
       ctaSecondary: 'Request a quote',
+    },
+    faq: {
+      tag: '( 8 ) Frequently asked questions',
+      title: 'Answers before you *ask.*',
+      items: [
+        {
+          question: 'How much does a website cost?',
+          answer:
+            'A Landing Page is 300 USD, a Corporate Website is 450 USD and an E-commerce store is 600 USD. Platforms, portals and advanced integrations are quoted individually once we understand the scope.',
+        },
+        {
+          question: 'What types of websites do you build?',
+          answer:
+            'Landing pages for campaigns and lead generation, corporate websites, online stores and custom web platforms such as client portals, membership sites and internal systems.',
+        },
+        {
+          question: 'What can be automated in my business?',
+          answer:
+            'Repetitive work such as lead routing, notifications, data synchronization between tools, marketing and sales follow-ups, and internal operations. We connect the tools you already use so they work as one system.',
+        },
+        {
+          question: 'Can you add artificial intelligence to my business?',
+          answer:
+            'Yes. We build AI assistants and agents, integrate AI into your existing tools and set up content workflows and data processing designed around how your business actually operates.',
+        },
+        {
+          question: 'Do you implement and customize a CRM?',
+          answer:
+            'Yes. We implement and customize CRM systems, build lead pipelines, connect them through API integrations to your website and other platforms, and create dashboards so your team sees what matters.',
+        },
+        {
+          question: 'How do I start a project with Kaede Project?',
+          answer:
+            'Write to us on WhatsApp or take the quick diagnostic on this page. We then go through Discover, Define, Design, Build, Connect and Launch, and confirm scope and timeline in a quote before we start.',
+        },
+      ],
     },
     footer: {
       copyright: '© 2026 Kaede Project. All rights reserved.',
@@ -766,11 +803,47 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     finalCta: {
-      tag: '( 8 ) Hagamos realidad la solución',
+      tag: '( 9 ) Hagamos realidad la solución',
       title: 'Tu próxima solución digital *empieza* *aquí.*',
       description: 'Transformemos tu idea en una experiencia digital funcional, inteligente y enfocada en el crecimiento.',
       ctaPrimary: 'Construyámoslo',
       ctaSecondary: 'Solicitar cotización',
+    },
+    faq: {
+      tag: '( 8 ) Preguntas frecuentes',
+      title: 'Respuestas antes de que *preguntes.*',
+      items: [
+        {
+          question: '¿Cuánto cuesta una página web?',
+          answer:
+            'Una Landing Page cuesta 900.000 COP, un Sitio Corporativo 1\'400.000 COP y una tienda E-commerce 1\'900.000 COP. Las plataformas, portales e integraciones avanzadas se cotizan de forma individual una vez entendemos el alcance.',
+        },
+        {
+          question: '¿Qué tipos de sitios web desarrollan?',
+          answer:
+            'Landing pages para campañas y captación de leads, sitios corporativos, tiendas online y plataformas web a la medida, como portales de clientes, sitios de membresía y sistemas internos.',
+        },
+        {
+          question: '¿Qué se puede automatizar en mi negocio?',
+          answer:
+            'El trabajo repetitivo: asignación de leads, notificaciones, sincronización de datos entre herramientas, seguimientos de marketing y ventas, y operaciones internas. Conectamos las herramientas que ya usas para que funcionen como un solo sistema.',
+        },
+        {
+          question: '¿Pueden integrar inteligencia artificial en mi negocio?',
+          answer:
+            'Sí. Creamos asistentes y agentes de IA, integramos IA en tus herramientas actuales y armamos flujos de contenido y procesamiento de datos pensados para cómo opera realmente tu negocio.',
+        },
+        {
+          question: '¿Implementan y personalizan un CRM?',
+          answer:
+            'Sí. Implementamos y personalizamos sistemas CRM, construimos pipelines de leads, los conectamos por API con tu sitio web y otras plataformas, y creamos dashboards para que tu equipo vea lo que importa.',
+        },
+        {
+          question: '¿Cómo inicio un proyecto con Kaede Project?',
+          answer:
+            'Escríbenos por WhatsApp o haz el diagnóstico rápido en esta página. Después recorremos Descubrir, Definir, Diseñar, Desarrollar, Conectar y Lanzar, y confirmamos alcance y tiempos en una cotización antes de empezar.',
+        },
+      ],
     },
     footer: {
       copyright: '© 2026 Kaede Project. Todos los derechos reservados.',

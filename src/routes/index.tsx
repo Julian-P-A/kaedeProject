@@ -1,55 +1,24 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useEffect } from 'react'
-import { useLanguage } from '#/context/LanguageContext'
-import { DiagnosticProvider } from '#/context/DiagnosticContext'
-import { Header } from '#/components/Header'
-import { Hero } from '#/components/Hero'
-import { Solutions } from '#/components/Solutions'
-import { ServiceCards } from '#/components/ServiceCards'
-import { WebDevelopment } from '#/components/WebDevelopment'
-import { DigitalEcosystem } from '#/components/DigitalEcosystem'
-import { Process } from '#/components/Process'
-import { Capabilities } from '#/components/Capabilities'
-import { Projects } from '#/components/Projects'
-import { About } from '#/components/About'
-import { FinalCTA } from '#/components/FinalCTA'
-import { Footer } from '#/components/Footer'
+import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createServerFn } from '@tanstack/react-start'
+import { getRequestHeader } from '@tanstack/react-start/server'
+import { DEFAULT_LANGUAGE } from '#/lib/seo'
+import type { Language } from '#/data/translations'
 
-export const Route = createFileRoute('/')({ component: Home })
+/** Picks the first supported language in the browser's Accept-Language header, falling back to English. */
+const getPreferredLanguage = createServerFn({ method: 'GET' }).handler((): Language => {
+  const header = getRequestHeader('accept-language') ?? ''
+  const preferred = header
+    .split(',')
+    .map((part) => part.split(';')[0].trim().toLowerCase().slice(0, 2))
+    .find((code) => code === 'en' || code === 'es')
 
-function Home() {
-  useDocumentMeta()
+  return (preferred as Language | undefined) ?? DEFAULT_LANGUAGE
+})
 
-  return (
-    <DiagnosticProvider>
-      <div className="bg-background">
-        <Header />
-        <main>
-          <Hero />
-          <Solutions />
-          <ServiceCards />
-          <WebDevelopment />
-          <DigitalEcosystem />
-          <Process />
-          <Capabilities />
-          <Projects />
-          <About />
-          <FinalCTA />
-        </main>
-        <Footer />
-      </div>
-    </DiagnosticProvider>
-  )
-}
-
-/** Keeps the tab title/description in sync with the active language, client-side only. */
-function useDocumentMeta() {
-  const { t, lang } = useLanguage()
-
-  useEffect(() => {
-    document.title = t.seo.title
-    document.documentElement.lang = lang
-    const meta = document.querySelector('meta[name="description"]')
-    if (meta) meta.setAttribute('content', t.seo.description)
-  }, [t, lang])
-}
+// `/` is the hreflang x-default: it only routes visitors to the matching language version.
+export const Route = createFileRoute('/')({
+  beforeLoad: async () => {
+    const lang = await getPreferredLanguage()
+    throw redirect({ to: '/$lang', params: { lang } })
+  },
+})

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { Link } from '@tanstack/react-router'
 import { useLanguage } from '#/context/LanguageContext'
 import { Logo } from '#/components/Logo'
 
 const easeOut = [0.16, 1, 0.3, 1] as const
 
 export function Header() {
-  const { lang, setLang, t } = useLanguage()
+  const { lang, t } = useLanguage()
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -49,7 +50,7 @@ export function Header() {
         </motion.nav>
 
         <div className="flex items-center gap-3">
-          <LanguageSwitch lang={lang} setLang={setLang} />
+          <LanguageSwitch lang={lang} />
 
           <motion.a
             href="#contact"
@@ -82,7 +83,7 @@ export function Header() {
   )
 }
 
-function LanguageSwitch({ lang, setLang }: { lang: 'en' | 'es'; setLang: (l: 'en' | 'es') => void }) {
+function LanguageSwitch({ lang }: { lang: 'en' | 'es' }) {
   return (
     <div
       role="group"
@@ -90,17 +91,18 @@ function LanguageSwitch({ lang, setLang }: { lang: 'en' | 'es'; setLang: (l: 'en
       className="flex items-center gap-0.5 rounded-full border border-border bg-black/60 p-1 text-xs font-medium backdrop-blur-md"
     >
       {(['en', 'es'] as const).map((code) => (
-        <button
+        <Link
           key={code}
-          type="button"
-          onClick={() => setLang(code)}
-          aria-pressed={lang === code}
+          to="/$lang"
+          params={{ lang: code }}
+          hrefLang={code}
+          aria-current={lang === code ? 'page' : undefined}
           className={`rounded-full px-2.5 py-1.5 transition ${
             lang === code ? 'bg-accent text-accent-foreground' : 'text-muted hover:text-foreground'
           }`}
         >
           {code.toUpperCase()}
-        </button>
+        </Link>
       ))}
     </div>
   )

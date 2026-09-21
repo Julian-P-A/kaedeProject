@@ -1,0 +1,31 @@
+# Kaede Project
+
+> Kaede Project is a digital development company. It designs and builds websites, AI solutions, automations, CRM systems and custom digital platforms for businesses.
+
+Kaede Project is available in English and Spanish. Spanish pricing is listed in Colombian pesos (COP), English pricing in US dollars (USD).
+
+## Pages
+
+- [Kaede Project (English)](https://kaedeproject.com/en): services, pricing, process, selected projects and FAQ.
+- [Kaede Project (Español)](https://kaedeproject.com/es): servicios, precios, proceso, proyectos destacados y preguntas frecuentes.
+
+## Services
+
+- Web Development: landing pages, corporate websites, e-commerce, custom websites and web platforms.
+- Artificial Intelligence: AI assistants, AI agents, AI integrations, content workflows and business-specific AI tools.
+- Automation: workflow automation, lead routing, notifications, data synchronization, marketing and sales automation.
+- CRM & Integrations: CRM implementation and customization, lead pipelines, API integrations and business dashboards.
+
+## Pricing (English site)
+
+- Landing Page: 300 USD
+- Corporate Website: 450 USD
+- E-commerce: 600 USD
+- Custom Web Solution: quoted per project
+
+## Contact
+
+- WhatsApp: https://wa.me/573151883229
+- LinkedIn: https://www.linkedin.com/company/kaedeproject/
+- Instagram: https://www.instagram.com/kaedeproject_/
+- Behance: https://www.behance.net/KaedeProjectCol
