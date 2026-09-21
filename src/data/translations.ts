@@ -112,6 +112,7 @@ export interface Translations {
     ctaPrimary: string
     ctaSecondary: string
   }
+  notFound: { title: string; description: string; cta: string }
   faq: { tag: string; title: string; items: { question: string; answer: string }[] }
   footer: { copyright: string; secondary: string }
   diagnostic: {
@@ -393,6 +394,11 @@ export const translations: Record<Language, Translations> = {
       description: 'Let’s transform your idea into a functional, intelligent and growth-focused digital experience.',
       ctaPrimary: 'Let’s build it',
       ctaSecondary: 'Request a quote',
+    },
+    notFound: {
+      title: 'Page *not* *found.*',
+      description: 'The page you are looking for does not exist or has moved.',
+      cta: 'Back to home',
     },
     faq: {
       tag: '( 8 ) Frequently asked questions',
@@ -808,6 +814,11 @@ export const translations: Record<Language, Translations> = {
       description: 'Transformemos tu idea en una experiencia digital funcional, inteligente y enfocada en el crecimiento.',
       ctaPrimary: 'Construyámoslo',
       ctaSecondary: 'Solicitar cotización',
+    },
+    notFound: {
+      title: 'Página *no* *encontrada.*',
+      description: 'La página que buscas no existe o cambió de lugar.',
+      cta: 'Volver al inicio',
     },
     faq: {
       tag: '( 8 ) Preguntas frecuentes',

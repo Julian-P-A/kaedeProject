@@ -1,14 +1,22 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Link } from '@tanstack/react-router'
+import { Link, useLocation } from '@tanstack/react-router'
 import { useLanguage } from '#/context/LanguageContext'
 import { Logo } from '#/components/Logo'
 
 const easeOut = [0.16, 1, 0.3, 1] as const
 
+/** Prefix for in-page anchors: empty on the home page, `/<lang>` elsewhere (e.g. the 404 page) so they still reach the right section. */
+function useHomePath() {
+  const { lang } = useLanguage()
+  const pathname = useLocation({ select: (location) => location.pathname })
+  return /^\/(en|es)\/?$/.test(pathname) ? '' : `/${lang}`
+}
+
 export function Header() {
   const { lang, t } = useLanguage()
   const [open, setOpen] = useState(false)
+  const home = useHomePath()
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
@@ -26,7 +34,7 @@ export function Header() {
           transition={{ duration: 0.6, ease: easeOut }}
           className="rounded-full border border-border bg-black/60 px-4 py-2 backdrop-blur-md"
         >
-          <Logo variant="compact" />
+          <Logo variant="compact" href={`${home}#top`} />
         </motion.div>
 
         <motion.nav
@@ -39,7 +47,7 @@ export function Header() {
           {t.nav.links.map((link) => (
             <motion.a
               key={link.href}
-              href={link.href}
+              href={`${home}${link.href}`}
               variants={{ hidden: { opacity: 0, y: -10 }, show: { opacity: 1, y: 0 } }}
               transition={{ duration: 0.4, ease: easeOut }}
               className="rounded-full px-4 py-2 text-sm text-foreground/80 transition hover:bg-white/10 hover:text-foreground"
@@ -53,7 +61,7 @@ export function Header() {
           <LanguageSwitch lang={lang} />
 
           <motion.a
-            href="#contact"
+            href={`${home}#contact`}
             initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.35, ease: easeOut }}
@@ -78,7 +86,7 @@ export function Header() {
         </div>
       </div>
 
-      <MobileMenu open={open} onClose={() => setOpen(false)} />
+      <MobileMenu open={open} onClose={() => setOpen(false)} home={home} />
     </header>
   )
 }
@@ -108,7 +116,7 @@ function LanguageSwitch({ lang }: { lang: 'en' | 'es' }) {
   )
 }
 
-function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
+function MobileMenu({ open, onClose, home }: { open: boolean; onClose: () => void; home: string }) {
   const { t } = useLanguage()
 
   return (
@@ -122,7 +130,7 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
           className="fixed inset-0 z-[60] flex flex-col bg-black lg:hidden"
         >
           <div className="flex items-center justify-between px-5 py-4">
-            <Logo variant="compact" />
+            <Logo variant="compact" href={`${home}#top`} />
             <button
               type="button"
               onClick={onClose}
@@ -146,7 +154,7 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
             {t.nav.links.map((link) => (
               <motion.a
                 key={link.href}
-                href={link.href}
+                href={`${home}${link.href}`}
                 onClick={onClose}
                 variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
                 transition={{ duration: 0.5, ease: easeOut }}
@@ -159,7 +167,7 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
 
           <div className="px-8 pb-10">
             <a
-              href="#contact"
+              href={`${home}#contact`}
               onClick={onClose}
               className="block w-full rounded-full bg-accent px-5 py-4 text-center font-medium text-accent-foreground"
             >

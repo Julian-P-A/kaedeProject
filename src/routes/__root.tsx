@@ -2,6 +2,7 @@ import { HeadContent, Scripts, createRootRoute, useParams } from '@tanstack/reac
 
 import appCss from '../styles.css?url'
 import { DEFAULT_LANGUAGE, isLanguage } from '#/lib/seo'
+import { NotFound } from '#/components/NotFound'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -35,6 +36,7 @@ export const Route = createRootRoute({
       },
     ],
   }),
+  notFoundComponent: NotFound,
   shellComponent: RootDocument,
 })
 
