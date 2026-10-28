@@ -2,24 +2,21 @@ import { motion } from 'framer-motion'
 import { useLanguage } from '#/context/LanguageContext'
 import { PopReveal, RiseReveal } from '#/components/animations/Reveal'
 import { CountUp } from '#/components/animations/CountUp'
+import { WindowDots } from '#/components/WindowDots'
 
 const AVATAR_COLORS = ['bg-accent', 'bg-beige', 'bg-white/20']
 
-export function HeroDashboard() {
+export function OperationsDashboard({ delay = 0 }: { delay?: number }) {
   const { t } = useLanguage()
   const d = t.dashboard
 
   return (
-    <RiseReveal delay={0.5} className="relative mx-auto w-full max-w-5xl">
+    <RiseReveal delay={delay} className="relative w-full">
       <div className="overflow-hidden rounded-3xl border border-border bg-surface shadow-[0_40px_120px_-40px_rgba(0,0,0,0.9)]">
         {/* Top application bar */}
         <div className="flex items-center justify-between gap-4 border-b border-border px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="flex gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-              <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-              <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-            </div>
+            <WindowDots />
             <span className="hidden font-display text-sm font-medium text-foreground/80 sm:inline">
               {d.barTitle}
             </span>
@@ -49,7 +46,7 @@ export function HeroDashboard() {
         <div className="px-4 py-8 sm:px-8">
           <p className="mb-5 text-xs font-medium uppercase tracking-[0.2em] text-muted">{d.flowLabel}</p>
           <div className="relative">
-            <div className="absolute left-[22px] right-[22px] top-[22px] hidden h-px bg-gradient-to-r from-accent/60 via-white/15 to-white/5 sm:block" />
+            <div className="absolute left-[22px] right-[22px] top-[22px] hidden h-px bg-gradient-to-r from-accent/60 via-white/20 to-white/15 sm:block" />
             <div className="relative flex flex-col gap-4 sm:flex-row sm:justify-between sm:gap-2">
               {d.flow.map((step, i) => (
                 <PopReveal
@@ -68,7 +65,7 @@ export function HeroDashboard() {
         </div>
 
         {/* Metric cards */}
-        <div className="grid grid-cols-2 gap-px bg-border sm:grid-cols-3 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-px border-t border-border bg-border sm:grid-cols-3 lg:grid-cols-5">
           <MetricCard label={d.cards.leads.label} value={d.cards.leads.value} delay={0} />
           <MetricCard label={d.cards.automation.label} value={d.cards.automation.value} delay={0.08} />
           <MetricCard label={d.cards.crm.label} value={d.cards.crm.value} delay={0.16} isText />

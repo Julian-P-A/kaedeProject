@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Link, useLocation } from '@tanstack/react-router'
 import { useLanguage } from '#/context/LanguageContext'
 import { Logo } from '#/components/Logo'
+import { useHydrated } from '#/hooks/useHydrated'
 
 const easeOut = [0.16, 1, 0.3, 1] as const
 
@@ -17,17 +18,30 @@ export function Header() {
   const { lang, t } = useLanguage()
   const [open, setOpen] = useState(false)
   const home = useHomePath()
+  const hydrated = useHydrated()
 
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : ''
+    if (!open) return
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
     return () => {
-      document.body.style.overflow = ''
+      document.body.style.overflow = previousOverflow
     }
   }, [open])
 
+  useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 64rem)')
+    const closeOnDesktop = () => {
+      if (desktop.matches) setOpen(false)
+    }
+    closeOnDesktop()
+    desktop.addEventListener('change', closeOnDesktop)
+    return () => desktop.removeEventListener('change', closeOnDesktop)
+  }, [])
+
   return (
     <header id="top" className="fixed inset-x-0 top-0 z-50">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
+      <div className="mx-auto flex max-w-site items-center justify-between px-5 py-4 sm:px-8">
         <motion.div
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -73,6 +87,7 @@ export function Header() {
           <button
             type="button"
             onClick={() => setOpen(true)}
+            disabled={!hydrated}
             aria-label="Open menu"
             aria-expanded={open}
             className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-black/60 backdrop-blur-md lg:hidden"

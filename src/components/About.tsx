@@ -1,6 +1,6 @@
 import { useLanguage } from '#/context/LanguageContext'
 import { RiseReveal } from '#/components/animations/Reveal'
-import { WordsReveal } from '#/components/animations/WordsReveal'
+import { ScrollFillText } from '#/components/animations/ScrollFillText'
 
 export function About() {
   const { t } = useLanguage()
@@ -11,8 +11,7 @@ export function About() {
         {t.about.tag}
       </RiseReveal>
 
-      <WordsReveal
-        as="h2"
+      <ScrollFillText
         text={t.about.statement}
         className="text-balance font-display text-2xl font-semibold leading-tight tracking-tight sm:text-4xl"
       />

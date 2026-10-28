@@ -3,6 +3,7 @@ import { HeadContent, Scripts, createRootRoute, useParams } from '@tanstack/reac
 import appCss from '../styles.css?url'
 import { DEFAULT_LANGUAGE, isLanguage } from '#/lib/seo'
 import { NotFound } from '#/components/NotFound'
+import { BrandCursor } from '#/components/animations/BrandCursor'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -40,18 +41,8 @@ export const Route = createRootRoute({
         children: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+'/gtagmetrics/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-MBZHNK5P');`,
-      },
-      {
-        src: 'https://www.googletagmanager.com/gtag/js?id=G-YXB6T2PR9X',
-        async: true,
-      },
-      {
-        children: `window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-YXB6T2PR9X');`,
       },
     ],
   }),
@@ -77,6 +68,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           />
         </noscript>
         {children}
+        <BrandCursor />
         <Scripts />
       </body>
     </html>

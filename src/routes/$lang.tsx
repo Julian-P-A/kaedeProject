@@ -15,6 +15,7 @@ import { About } from '#/components/About'
 import { Faq } from '#/components/Faq'
 import { FinalCTA } from '#/components/FinalCTA'
 import { Footer } from '#/components/Footer'
+import { FloatingWhatsApp } from '#/components/FloatingWhatsApp'
 
 export const Route = createFileRoute('/$lang')({
   beforeLoad: ({ params }) => {
@@ -46,6 +47,7 @@ function Home() {
             <FinalCTA />
           </main>
           <Footer />
+          <FloatingWhatsApp />
         </div>
       </DiagnosticProvider>
     </LanguageProvider>

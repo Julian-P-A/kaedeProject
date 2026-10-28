@@ -1,3 +1,6 @@
+import { whatsappUrl } from '#/lib/contact'
+import { formatPlanPrice } from '#/data/pricing'
+
 export type Language = 'en' | 'es'
 
 interface NavLink {
@@ -50,11 +53,6 @@ interface DiagnosticResult {
   description: string
 }
 
-interface EcosystemNode {
-  label: string
-  status: string
-}
-
 export type ProjectId = 'fuego' | 'celestina' | 'leadgen'
 
 interface Project {
@@ -63,6 +61,16 @@ interface Project {
   category: string
   description: string
 }
+
+type ProcessStageCopy = { title: string; description: string; deliverable: string }
+export type ProcessStage = ProcessStageCopy & (
+  | { id: 'brief'; nodes: [string, string, string, string, string] }
+  | { id: 'scope'; nodes: [string, string, string] }
+  | { id: 'design'; nodes: [string, string] }
+  | { id: 'build'; nodes: [string, string, string] }
+  | { id: 'connect'; nodes: [string, string, string, string] }
+  | { id: 'launch'; nodes: [string, string, string] }
+)
 
 export interface Translations {
   seo: { title: string; description: string }
@@ -73,6 +81,8 @@ export interface Translations {
     description: string
     ctaPrimary: string
     ctaSecondary: string
+    /** Small line under the CTAs. */
+    tagline: string
     whatsappUrl: string
   }
   dashboard: {
@@ -100,11 +110,15 @@ export interface Translations {
     options: WebDevOption[]
   }
   pricing: { quote: string; diagnosticPrompt: string; diagnosticCta: string }
-  process: { tag: string; title: string; stages: { number: string; title: string }[] }
+  process: {
+    tag: string
+    title: string
+    stages: ProcessStage[]
+  }
   capabilities: { tag: string; items: string[] }
   projectsSection: { tag: string; title: string; items: Project[] }
   about: { tag: string; statement: string; supporting: string }
-  ecosystem: { tag: string; title: string; nodes: EcosystemNode[] }
+  ecosystem: { tag: string; title: string }
   finalCta: {
     tag: string
     title: string
@@ -131,6 +145,9 @@ export interface Translations {
     }
     nav: { next: string; back: string; close: string }
     results: Record<DiagnosticResultId, DiagnosticResult>
+    submitting: string
+    submitError: string
+    retry: string
     finalMessage: string
   }
 }
@@ -138,9 +155,9 @@ export interface Translations {
 export const translations: Record<Language, Translations> = {
   en: {
     seo: {
-      title: 'Kaede Project — Digital Development, AI & Automation',
+      title: 'Kaede Project — IT & AI Consulting and Development',
       description:
-        'Kaede Project designs and builds websites, AI solutions, automations, CRM systems and custom digital platforms focused on real business growth.',
+        'IT and AI consulting and development for businesses: websites, AI assistants, automation, CRM and custom platforms focused on real growth.',
     },
     nav: {
       links: [
@@ -153,14 +170,15 @@ export const translations: Record<Language, Translations> = {
       cta: 'Start a project',
     },
     hero: {
-      eyebrow: 'Kaede Project / Digital Solutions',
+      eyebrow: 'Kaede Project / IT & AI consulting and development',
       title: 'Let’s make your next project a *reality.*',
       description:
-        'We design and build digital solutions powered by strategy, technology and AI to help your business grow faster.',
+        'We build your website, connect your CRM and automate customer service with AI, so your business sells more without more work.',
       ctaPrimary: 'Start your project',
       ctaSecondary: 'Explore solutions',
+      tagline: 'Your IT & AI partner, for businesses of every size.',
       whatsappUrl:
-        'https://wa.me/573151883229?text=Hello.%20I%20am%20ready%20to%20start%20a%20project%20with%20you.%20What%20are%20the%20next%20steps%3F',
+        whatsappUrl('Hello. I am ready to start a project with you. What are the next steps?'),
     },
     dashboard: {
       barTitle: 'Kaede Operations',
@@ -179,15 +197,15 @@ export const translations: Record<Language, Translations> = {
     },
     solutionsIntro: {
       tag: '( 1 ) What we do',
-      title: 'Digital solutions built for real business *goals.*',
+      title: 'IT and AI built around real business *goals.*',
       description:
-        'From websites to AI-powered platforms, we create digital experiences that connect brands with people, automate processes and drive measurable growth.',
+        'We advise you on what to build, then we build it: websites, AI, automation and CRM that help you sell more, cut manual work and keep your whole business connected.',
     },
     services: [
       {
         number: '01',
         title: 'Web Development',
-        headline: 'Web experiences engineered around your business.',
+        headline: 'Websites built to sell and to grow with your business.',
         items: [
           'Landing Pages',
           'Corporate Websites',
@@ -200,8 +218,9 @@ export const translations: Record<Language, Translations> = {
       {
         number: '02',
         title: 'Artificial Intelligence',
-        headline: 'AI solutions designed around real workflows, not hype.',
+        headline: 'AI consulting and development around real workflows, not hype.',
         items: [
+          'AI consulting',
           'AI assistants',
           'AI agents',
           'AI integrations',
@@ -248,7 +267,7 @@ export const translations: Record<Language, Translations> = {
       {
         tag: 'Think',
         title: 'Artificial Intelligence',
-        description: 'AI assistants and agents wired into how your business actually works.',
+        description: 'AI consulting and development: assistants and agents wired into how your business actually works.',
       },
       {
         tag: 'Connect',
@@ -264,35 +283,35 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'landing',
           name: 'Landing Page',
-          price: '300 USD',
+          price: formatPlanPrice('en', 'landing'),
           description:
-            'A focused digital experience designed to present your offer, capture leads and turn traffic into opportunities.',
+            'A focused page designed to present your offer, capture leads and turn traffic into opportunities.',
           bestFor: ['Campaigns', 'Product launches', 'Service promotions', 'Lead generation'],
           cta: 'Launch my landing page',
           whatsappUrl:
-            'https://wa.me/573151883229?text=Hello.%20I%20am%20interested%20in%20the%20Landing%20Page%20plan.%20I%20want%20to%20know%20the%20steps%20to%20start.',
+            whatsappUrl('Hello. I am interested in the Landing Page plan. I want to know the steps to start.'),
         },
         {
           id: 'corporate',
           name: 'Corporate Website',
-          price: '450 USD',
+          price: formatPlanPrice('en', 'corporate'),
           description:
             'A professional website designed to position your brand, communicate your value and create trust with clients.',
           bestFor: ['Companies', 'Agencies', 'Growing brands', 'Institutions'],
           cta: 'Build my website',
           whatsappUrl:
-            'https://wa.me/573151883229?text=Hello.%20I%20want%20to%20build%20a%20Corporate%20Website%20with%20you.%20I%20would%20like%20to%20discuss%20the%20details.',
+            whatsappUrl('Hello. I want to build a Corporate Website with you. I would like to discuss the details.'),
         },
         {
           id: 'ecommerce',
           name: 'E-commerce',
-          price: '600 USD',
+          price: formatPlanPrice('en', 'ecommerce'),
           description:
             'A scalable online store designed to showcase products, simplify purchases and support your digital sales.',
           bestFor: ['Retail brands', 'Product catalogs', 'Beauty brands', 'Product-based businesses'],
           cta: 'Create my online store',
           whatsappUrl:
-            'https://wa.me/573151883229?text=Hello.%20I%20am%20looking%20to%20create%20an%20online%20store%20(E-commerce).%20Can%20we%20schedule%20a%20meeting%20to%20start%3F',
+            whatsappUrl('Hello. I am looking to create an online store (E-commerce). Can we schedule a meeting to start?'),
         },
         {
           id: 'custom',
@@ -311,7 +330,7 @@ export const translations: Record<Language, Translations> = {
           ],
           cta: 'Request a quote',
           whatsappUrl:
-            'https://wa.me/573151883229?text=Hello.%20I%20want%20to%20transform%20my%20idea%20into%20a%20digital%20solution%20with%20Kaede%20Project.%20How%20can%20we%20start%3F',
+            whatsappUrl('Hello. I want to turn my idea into a custom platform with Kaede Project. How can we start?'),
         },
       ],
     },
@@ -322,19 +341,51 @@ export const translations: Record<Language, Translations> = {
     },
     process: {
       tag: '( 4 ) Process',
-      title: 'Strategy, design and technology working *together.*',
+      title: 'Consulting and development, in one *team.*',
       stages: [
-        { number: '01', title: 'Discover' },
-        { number: '02', title: 'Define' },
-        { number: '03', title: 'Design' },
-        { number: '04', title: 'Build' },
-        { number: '05', title: 'Connect' },
-        { number: '06', title: 'Launch' },
+        {
+          id: 'brief', title: 'Discover',
+          description: 'We listen, map your business and find where technology can make a difference.',
+          deliverable: 'A shared understanding of your business, goals and opportunities.',
+          nodes: ['Business', 'Goals', 'Tools', 'Team', 'Your brief'],
+        },
+        {
+          id: 'scope', title: 'Define',
+          description: 'We turn what we learn into clear priorities, scope and a plan for your project.',
+          deliverable: 'An agreed scope and a clear roadmap.',
+          nodes: ['Goals', 'Project scope', 'Roadmap'],
+        },
+        {
+          id: 'design', title: 'Design',
+          description: 'We shape the experience, structure and visual direction before development.',
+          deliverable: 'An experience designed around your users and your brand.',
+          nodes: ['Explore', 'Structure, experience and visual design'],
+        },
+        {
+          id: 'build', title: 'Build',
+          description: 'We bring the design to life and test how every part works together.',
+          deliverable: 'A working, tested solution built for your business.',
+          nodes: ['Development', 'Testing', 'Ready to connect'],
+        },
+        {
+          id: 'connect', title: 'Connect',
+          description: 'We connect your website, CRM, AI and automations into one workflow.',
+          deliverable: 'Your tools connected, with information flowing between them.',
+          nodes: ['Web', 'CRM', 'AI', 'Automation'],
+        },
+        {
+          id: 'launch', title: 'Launch',
+          description: 'We put the solution live, check the connections and prepare your team to use it.',
+          deliverable: 'Your project live, connected and ready for the next stage.',
+          nodes: ['Deployment', 'Connected systems', 'Monitoring'],
+        },
       ],
     },
     capabilities: {
       tag: '( 5 ) Capabilities',
       items: [
+        'IT Consulting',
+        'AI Consulting',
         'Web Development',
         'Artificial Intelligence',
         'Automation',
@@ -374,24 +425,17 @@ export const translations: Record<Language, Translations> = {
     about: {
       tag: '( 7 ) About',
       statement:
-        'We design and develop digital experiences that connect brands with people, drive measurable growth and turn business goals into real results.',
-      supporting: 'From websites to intelligent business systems — we build it, you grow it.',
+        'We are the IT and AI partner for businesses that want to grow without complicating their operation: we advise you, build what you need and connect it so your business works as one system.',
+      supporting: 'From your website to AI and automation, one team for all of it.',
     },
     ecosystem: {
       tag: '( 3 ) Connected Ecosystem',
-      title: 'Your digital ecosystem should work as *one* *system.*',
-      nodes: [
-        { label: 'Website', status: 'Live' },
-        { label: 'CRM', status: 'Connected' },
-        { label: 'AI', status: 'Active' },
-        { label: 'Automation', status: 'Running' },
-        { label: 'Analytics', status: 'Tracking' },
-      ],
+      title: 'Your website, CRM, AI and team should work as *one* *system.*',
     },
     finalCta: {
-      tag: '( 9 ) Make the solution a reality',
-      title: 'Your next digital solution *starts* *here.*',
-      description: 'Let’s transform your idea into a functional, intelligent and growth-focused digital experience.',
+      tag: '( 9 ) Let’s talk',
+      title: 'Your next project *starts* *here.*',
+      description: 'Tell us what your business needs. We’ll advise you on the best path and build it with you.',
       ctaPrimary: 'Let’s build it',
       ctaSecondary: 'Request a quote',
     },
@@ -408,6 +452,11 @@ export const translations: Record<Language, Translations> = {
           question: 'How much does a website cost?',
           answer:
             'A Landing Page is 300 USD, a Corporate Website is 450 USD and an E-commerce store is 600 USD. Platforms, portals and advanced integrations are quoted individually once we understand the scope.',
+        },
+        {
+          question: 'Do you offer IT and AI consulting?',
+          answer:
+            'Yes. Before building anything, we help you decide what your business actually needs: which processes to automate, where AI adds value and which tools to connect. Then we build it with you.',
         },
         {
           question: 'What types of websites do you build?',
@@ -552,14 +601,17 @@ export const translations: Record<Language, Translations> = {
             "You're about to launch or just getting started. The ideal moment to build a professional digital presence from day one.",
         },
       },
-      finalMessage: 'You will receive a call from our team shortly.',
+      submitting: 'Your diagnosis is ready. Sending your contact details…',
+      submitError: 'Your diagnosis is ready, but we could not confirm receipt of your contact details. Please try again.',
+      retry: 'Retry sending',
+      finalMessage: 'We received your details. Our team will contact you to coordinate the next steps.',
     },
   },
   es: {
     seo: {
-      title: 'Kaede Project — Desarrollo Digital, IA y Automatización',
+      title: 'Kaede Project — Consultoría y Desarrollo de TI e IA',
       description:
-        'Kaede Project diseña y desarrolla sitios web, soluciones con IA, automatizaciones, CRM y plataformas digitales enfocadas en el crecimiento real de los negocios.',
+        'Consultoría y desarrollo de TI e IA para empresas: páginas web, asistentes de IA, automatización, CRM y plataformas a la medida enfocadas en crecimiento real.',
     },
     nav: {
       links: [
@@ -572,14 +624,15 @@ export const translations: Record<Language, Translations> = {
       cta: 'Iniciar un proyecto',
     },
     hero: {
-      eyebrow: 'Kaede Project / Soluciones Digitales',
+      eyebrow: 'Kaede Project / Consultoría y desarrollo de TI e IA',
       title: 'Hagamos *realidad* tu próximo proyecto.',
       description:
-        'Diseñamos y desarrollamos soluciones digitales impulsadas por estrategia, tecnología e IA para ayudar a tu negocio a crecer más rápido.',
+        'Creamos tu página web, conectamos tu CRM y automatizamos tu atención con IA, para que tu negocio venda más sin sumar más trabajo.',
       ctaPrimary: 'Inicia tu proyecto',
       ctaSecondary: 'Explorar soluciones',
+      tagline: 'Tu socio de TI e IA, para empresas de todos los tamaños.',
       whatsappUrl:
-        'https://wa.me/573151883229?text=Hola.%20Estoy%20listo%20para%20iniciar%20un%20proyecto%20con%20ustedes.%20%C2%BFCu%C3%A1les%20son%20los%20siguientes%20pasos%3F',
+        whatsappUrl('Hola. Estoy listo para iniciar un proyecto con ustedes. ¿Cuáles son los siguientes pasos?'),
     },
     dashboard: {
       barTitle: 'Kaede Operations',
@@ -598,15 +651,15 @@ export const translations: Record<Language, Translations> = {
     },
     solutionsIntro: {
       tag: '( 1 ) Qué hacemos',
-      title: 'Soluciones digitales creadas para objetivos de negocio *reales.*',
+      title: 'TI e IA al servicio de objetivos de negocio *reales.*',
       description:
-        'Desde sitios web hasta plataformas impulsadas por IA, creamos experiencias digitales que conectan marcas con personas, automatizan procesos y generan crecimiento medible.',
+        'Te asesoramos sobre qué construir y luego lo construimos: páginas web, IA, automatización y CRM que te ayudan a vender más, reducir el trabajo manual y mantener todo tu negocio conectado.',
     },
     services: [
       {
         number: '01',
         title: 'Desarrollo Web',
-        headline: 'Experiencias web desarrolladas alrededor de tu negocio.',
+        headline: 'Sitios web hechos para vender y crecer con tu negocio.',
         items: [
           'Landing Pages',
           'Sitios Corporativos',
@@ -619,8 +672,9 @@ export const translations: Record<Language, Translations> = {
       {
         number: '02',
         title: 'Inteligencia Artificial',
-        headline: 'Soluciones de IA diseñadas alrededor de procesos reales, no de tendencias.',
+        headline: 'Consultoría y desarrollo de IA alrededor de procesos reales, no de tendencias.',
         items: [
+          'Consultoría de IA',
           'Asistentes de IA',
           'Agentes de IA',
           'Integraciones de IA',
@@ -667,7 +721,7 @@ export const translations: Record<Language, Translations> = {
       {
         tag: 'Pensar',
         title: 'Inteligencia Artificial',
-        description: 'Asistentes y agentes de IA conectados a cómo realmente opera tu negocio.',
+        description: 'Consultoría y desarrollo de IA: asistentes y agentes conectados a cómo realmente opera tu negocio.',
       },
       {
         tag: 'Conectar',
@@ -683,35 +737,35 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'landing',
           name: 'Landing Page',
-          price: '900.000 COP',
+          price: formatPlanPrice('es', 'landing'),
           description:
-            'Una experiencia digital enfocada, diseñada para presentar tu oferta, capturar leads y convertir tráfico en oportunidades.',
+            'Una página enfocada, diseñada para presentar tu oferta, capturar leads y convertir tráfico en oportunidades.',
           bestFor: ['Campañas', 'Lanzamientos de producto', 'Promociones de servicios', 'Generación de leads'],
           cta: 'Crear mi landing page',
           whatsappUrl:
-            'https://wa.me/573151883229?text=Hola.%20Me%20interesa%20el%20plan%20de%20Landing%20Page.%20Quiero%20conocer%20los%20pasos%20para%20empezar.',
+            whatsappUrl('Hola. Me interesa el plan de Landing Page. Quiero conocer los pasos para empezar.'),
         },
         {
           id: 'corporate',
           name: 'Sitio Corporativo',
-          price: "1'400.000 COP",
+          price: formatPlanPrice('es', 'corporate'),
           description:
             'Un sitio web profesional diseñado para posicionar tu marca, comunicar tu valor y generar confianza con tus clientes.',
           bestFor: ['Empresas', 'Agencias', 'Marcas en crecimiento', 'Instituciones'],
           cta: 'Crear mi sitio web',
           whatsappUrl:
-            'https://wa.me/573151883229?text=Hola.%20Quiero%20desarrollar%20un%20Sitio%20Web%20Corporativo%20con%20ustedes.%20Me%20gustar%C3%ADa%20discutir%20los%20detalles.',
+            whatsappUrl('Hola. Quiero desarrollar un Sitio Web Corporativo con ustedes. Me gustaría discutir los detalles.'),
         },
         {
           id: 'ecommerce',
           name: 'E-commerce',
-          price: "1'900.000 COP",
+          price: formatPlanPrice('es', 'ecommerce'),
           description:
             'Una tienda online escalable diseñada para mostrar productos, simplificar las compras y potenciar tus ventas digitales.',
           bestFor: ['Marcas de retail', 'Catálogos de producto', 'Marcas de belleza', 'Negocios basados en productos'],
           cta: 'Crear mi tienda online',
           whatsappUrl:
-            'https://wa.me/573151883229?text=Hola.%20Busco%20crear%20una%20tienda%20en%20l%C3%ADnea%20(E-commerce).%20%C2%BFPodemos%20agendar%20una%20reuni%C3%B3n%20para%20iniciar%3F',
+            whatsappUrl('Hola. Busco crear una tienda en línea (E-commerce). ¿Podemos agendar una reunión para iniciar?'),
         },
         {
           id: 'custom',
@@ -730,7 +784,7 @@ export const translations: Record<Language, Translations> = {
           ],
           cta: 'Solicitar cotización',
           whatsappUrl:
-            'https://wa.me/573151883229?text=Hola.%20Quiero%20transformar%20mi%20idea%20en%20una%20soluci%C3%B3n%20digital%20con%20Kaede%20Project.%20%C2%BFC%C3%B3mo%20podemos%20empezar%3F',
+            whatsappUrl('Hola. Quiero convertir mi idea en una plataforma a la medida con Kaede Project. ¿Cómo podemos empezar?'),
         },
       ],
     },
@@ -742,19 +796,51 @@ export const translations: Record<Language, Translations> = {
     },
     process: {
       tag: '( 4 ) Proceso',
-      title: 'Estrategia, diseño y tecnología trabajando *juntas.*',
+      title: 'Consultoría y desarrollo, en un solo *equipo.*',
       stages: [
-        { number: '01', title: 'Descubrir' },
-        { number: '02', title: 'Definir' },
-        { number: '03', title: 'Diseñar' },
-        { number: '04', title: 'Desarrollar' },
-        { number: '05', title: 'Conectar' },
-        { number: '06', title: 'Lanzar' },
+        {
+          id: 'brief', title: 'Descubrir',
+          description: 'Escuchamos, entendemos tu negocio y encontramos dónde puede aportar la tecnología.',
+          deliverable: 'Una visión compartida del negocio, sus objetivos y oportunidades.',
+          nodes: ['Negocio', 'Objetivos', 'Herramientas', 'Equipo', 'Tu proyecto'],
+        },
+        {
+          id: 'scope', title: 'Definir',
+          description: 'Convertimos lo aprendido en prioridades, un alcance claro y un plan para tu proyecto.',
+          deliverable: 'Un alcance acordado y una hoja de ruta clara.',
+          nodes: ['Objetivos', 'Alcance', 'Plan'],
+        },
+        {
+          id: 'design', title: 'Diseñar',
+          description: 'Damos forma a la experiencia, la estructura y la dirección visual antes de desarrollar.',
+          deliverable: 'Una experiencia pensada para tus usuarios y tu marca.',
+          nodes: ['Explorar', 'Estructura, experiencia y diseño visual'],
+        },
+        {
+          id: 'build', title: 'Desarrollar',
+          description: 'Hacemos realidad el diseño y probamos cómo funciona cada parte del proyecto.',
+          deliverable: 'Una solución funcional y probada para tu negocio.',
+          nodes: ['Desarrollo', 'Pruebas', 'Listo para conectar'],
+        },
+        {
+          id: 'connect', title: 'Conectar',
+          description: 'Conectamos tu web, CRM, IA y automatizaciones en un mismo flujo de trabajo.',
+          deliverable: 'Tus herramientas conectadas y la información fluyendo entre ellas.',
+          nodes: ['Web', 'CRM', 'IA', 'Automatización'],
+        },
+        {
+          id: 'launch', title: 'Lanzar',
+          description: 'Publicamos la solución, comprobamos las conexiones y preparamos a tu equipo para usarla.',
+          deliverable: 'Tu proyecto publicado, conectado y listo para su siguiente etapa.',
+          nodes: ['Publicación', 'Sistemas conectados', 'Monitoreo'],
+        },
       ],
     },
     capabilities: {
       tag: '( 5 ) Capacidades',
       items: [
+        'Consultoría de TI',
+        'Consultoría de IA',
         'Desarrollo Web',
         'Inteligencia Artificial',
         'Automatización',
@@ -794,24 +880,17 @@ export const translations: Record<Language, Translations> = {
     about: {
       tag: '( 7 ) Nosotros',
       statement:
-        'Diseñamos y desarrollamos experiencias digitales que conectan marcas con personas, generan crecimiento medible y convierten objetivos de negocio en resultados reales.',
-      supporting: 'Desde sitios web hasta sistemas empresariales inteligentes — nosotros lo construimos, tú lo haces crecer.',
+        'Somos el socio de TI e IA para empresas que quieren crecer sin complicar su operación: te asesoramos, construimos lo que necesitas y lo conectamos para que tu negocio funcione como un solo sistema.',
+      supporting: 'Desde tu página web hasta la IA y la automatización, un solo equipo para todo.',
     },
     ecosystem: {
       tag: '( 3 ) Ecosistema Conectado',
-      title: 'Tu ecosistema digital debería funcionar como *un* *solo* *sistema.*',
-      nodes: [
-        { label: 'Sitio Web', status: 'Activo' },
-        { label: 'CRM', status: 'Conectado' },
-        { label: 'IA', status: 'Activa' },
-        { label: 'Automatización', status: 'Ejecutando' },
-        { label: 'Analítica', status: 'Monitoreando' },
-      ],
+      title: 'Tu página web, CRM, IA y equipo deberían funcionar como *un* *solo* *sistema.*',
     },
     finalCta: {
-      tag: '( 9 ) Hagamos realidad la solución',
-      title: 'Tu próxima solución digital *empieza* *aquí.*',
-      description: 'Transformemos tu idea en una experiencia digital funcional, inteligente y enfocada en el crecimiento.',
+      tag: '( 9 ) Hablemos',
+      title: 'Tu próximo proyecto *empieza* *aquí.*',
+      description: 'Cuéntanos qué necesita tu negocio. Te asesoramos sobre el mejor camino y lo construimos contigo.',
       ctaPrimary: 'Construyámoslo',
       ctaSecondary: 'Solicitar cotización',
     },
@@ -828,6 +907,11 @@ export const translations: Record<Language, Translations> = {
           question: '¿Cuánto cuesta una página web?',
           answer:
             'Una Landing Page cuesta 900.000 COP, un Sitio Corporativo 1\'400.000 COP y una tienda E-commerce 1\'900.000 COP. Las plataformas, portales e integraciones avanzadas se cotizan de forma individual una vez entendemos el alcance.',
+        },
+        {
+          question: '¿Ofrecen consultoría de TI e IA?',
+          answer:
+            'Sí. Antes de construir, te ayudamos a definir qué necesita realmente tu negocio: qué procesos automatizar, dónde aporta la IA y qué herramientas conectar. Luego lo construimos contigo.',
         },
         {
           question: '¿Qué tipos de sitios web desarrollan?',
@@ -972,7 +1056,10 @@ export const translations: Record<Language, Translations> = {
             'Estás por lanzarte o apenas empezando. Es el momento ideal para construir una presencia digital profesional desde el día uno.',
         },
       },
-      finalMessage: 'En breve recibirá una llamada de nuestro equipo',
+      submitting: 'Tu diagnóstico está listo. Estamos enviando tus datos de contacto…',
+      submitError: 'Tu diagnóstico está listo, pero no pudimos confirmar la recepción de tus datos. Intenta enviarlos de nuevo.',
+      retry: 'Reintentar envío',
+      finalMessage: 'Recibimos tus datos. Nuestro equipo te contactará para coordinar los siguientes pasos.',
     },
   },
 }

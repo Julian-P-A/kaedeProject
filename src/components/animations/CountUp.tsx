@@ -1,5 +1,6 @@
+import { useReducedMotion } from '#/hooks/useReducedMotion'
 import { useEffect, useRef, useState } from 'react'
-import { useInView, useReducedMotion } from 'framer-motion'
+import { useInView } from 'framer-motion'
 
 /**
  * Animates a numeric value counting up when it scrolls into view.
@@ -12,9 +13,8 @@ export function CountUp({ value, className, duration = 1.2 }: { value: string; c
   const reduce = useReducedMotion()
   const [display, setDisplay] = useState<string>(value)
 
-  const match = value.match(/^(\D*)(\d+(?:\.\d+)?)(\D*)$/)
-
   useEffect(() => {
+    const match = value.match(/^(\D*)(\d+(?:\.\d+)?)(\D*)$/)
     if (!inView || reduce || !match) {
       setDisplay(value)
       return
@@ -34,8 +34,7 @@ export function CountUp({ value, className, duration = 1.2 }: { value: string; c
     }
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inView, reduce])
+  }, [inView, reduce, value, duration])
 
   return (
     <span ref={ref} className={className}>

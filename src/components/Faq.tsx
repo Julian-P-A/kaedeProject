@@ -35,14 +35,20 @@ export function Faq() {
                   className="flex w-full items-center justify-between gap-6 py-5 text-left font-display text-lg font-semibold tracking-tight"
                 >
                   <span>{item.question}</span>
-                  <span
+                  <svg
                     aria-hidden="true"
-                    className={`text-xl text-accent transition-transform duration-300 ease-out motion-reduce:transition-none ${
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    className={`h-5 w-5 shrink-0 text-accent transition-transform duration-300 ease-out motion-reduce:transition-none ${
                       open ? 'rotate-45' : ''
                     }`}
                   >
-                    +
-                  </span>
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
                 </button>
               </h3>
 

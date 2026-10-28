@@ -8,7 +8,7 @@ export function WebDevelopment() {
   const { t } = useLanguage()
 
   return (
-    <section id="pricing" className="mx-auto max-w-7xl px-5 py-24 sm:px-8 sm:py-32">
+    <section id="pricing" className="mx-auto max-w-site px-5 py-24 sm:px-8 sm:py-32">
       <RiseReveal className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-accent">
         {t.webDev.tag}
       </RiseReveal>
@@ -72,7 +72,7 @@ export function WebDevelopment() {
 
 function PricingSummary() {
   const { t } = useLanguage()
-  const { openDiagnostic } = useDiagnostic()
+  const { openDiagnostic, ready } = useDiagnostic()
 
   return (
     <RiseReveal delay={0.1} className="mt-10 overflow-hidden rounded-3xl bg-beige text-beige-foreground">
@@ -81,6 +81,7 @@ function PricingSummary() {
         <button
           type="button"
           onClick={openDiagnostic}
+          disabled={!ready}
           className="w-full shrink-0 rounded-full bg-accent px-6 py-3 text-sm font-medium text-accent-foreground transition hover:brightness-95 sm:w-auto"
         >
           {t.pricing.diagnosticCta}

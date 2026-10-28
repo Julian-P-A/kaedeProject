@@ -5,7 +5,7 @@ import { WordsReveal } from '#/components/animations/WordsReveal'
 
 export function FinalCTA() {
   const { t } = useLanguage()
-  const { openDiagnostic } = useDiagnostic()
+  const { openDiagnostic, ready } = useDiagnostic()
 
   return (
     <section id="contact" className="mx-auto max-w-5xl scroll-mt-28 px-5 py-24 text-center sm:px-8 sm:py-32">
@@ -38,6 +38,7 @@ export function FinalCTA() {
         <button
           type="button"
           onClick={openDiagnostic}
+          disabled={!ready}
           className="w-full rounded-full border border-border-strong px-7 py-3.5 text-sm font-medium text-foreground transition hover:bg-white/5 sm:w-auto"
         >
           {t.finalCta.ctaSecondary}

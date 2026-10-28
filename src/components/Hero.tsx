@@ -1,13 +1,23 @@
 import { useLanguage } from '#/context/LanguageContext'
 import { WordsReveal } from '#/components/animations/WordsReveal'
-import { HeroDashboard } from '#/components/HeroDashboard'
+import { AsciiVideo } from '#/components/animations/AsciiVideo'
 
 export function Hero() {
   const { t } = useLanguage()
 
   return (
-    <section className="relative overflow-hidden pb-20 pt-36 sm:pb-28 sm:pt-44">
+    <section className="relative isolate flex min-h-dvh flex-col justify-center overflow-hidden pb-16 pt-28 sm:pb-20 sm:pt-32">
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[600px] bg-[radial-gradient(ellipse_at_top,rgba(215,255,92,0.08),transparent_60%)]" />
+
+      {/* Decorative ASCII backdrop, set slightly below centre so the hands meet behind
+          the headline; they sit at the edges, leaving the centre clear.
+          Faded out at the top and bottom. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-[58%] -z-10 -translate-y-1/2 [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_70%,transparent)]"
+      >
+        <AsciiVideo src="/ascii/creation" mobileSrc="/ascii/creation-mobile" className="w-full text-muted/70" />
+      </div>
 
       <div className="mx-auto max-w-5xl px-5 text-center sm:px-8">
         <p className="animate-fade-up mb-6 inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-muted">
@@ -48,10 +58,13 @@ export function Hero() {
             {t.hero.ctaSecondary}
           </a>
         </div>
-      </div>
 
-      <div className="mt-16 px-5 sm:mt-20 sm:px-8">
-        <HeroDashboard />
+        <p
+          className="animate-fade-up mt-6 text-xs tracking-wide text-muted/80"
+          style={{ animationDelay: '350ms' }}
+        >
+          {t.hero.tagline}
+        </p>
       </div>
     </section>
   )

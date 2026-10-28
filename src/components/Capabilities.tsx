@@ -8,7 +8,7 @@ export function Capabilities() {
   const { t } = useLanguage()
 
   return (
-    <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8 sm:py-32">
+    <section className="mx-auto max-w-site px-5 py-24 sm:px-8 sm:py-32">
       <RiseReveal className="mb-10 text-xs font-medium uppercase tracking-[0.2em] text-accent">
         {t.capabilities.tag}
       </RiseReveal>

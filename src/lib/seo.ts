@@ -1,21 +1,19 @@
 import { translations, type Language } from '#/data/translations'
+import { CONTACT_PHONE, WHATSAPP_URL } from '#/lib/contact'
+import { PLAN_PRICES } from '#/data/pricing'
+import { LANGUAGES } from '#/lib/language'
+export { DEFAULT_LANGUAGE, LANGUAGES, isLanguage } from '#/lib/language'
 
-export const SITE_URL = 'https://kaedeproject.com'
-export const LANGUAGES: readonly Language[] = ['en', 'es']
-export const DEFAULT_LANGUAGE: Language = 'en'
+export const SITE_URL = 'https://www.kaedeproject.com'
 
 const LOCALES: Record<Language, string> = { en: 'en_US', es: 'es_CO' }
-const OG_IMAGE = `${SITE_URL}/og-image.png`
+const ogImage = (lang: Language) => `${SITE_URL}/og-image-${lang}.png`
 
 const SOCIAL_PROFILES = [
   'https://www.linkedin.com/company/kaedeproject/',
   'https://www.instagram.com/kaedeproject_/',
   'https://www.behance.net/KaedeProjectCol',
 ]
-
-export function isLanguage(value: string): value is Language {
-  return (LANGUAGES as readonly string[]).includes(value)
-}
 
 export function pageUrl(lang: Language) {
   return `${SITE_URL}/${lang}`
@@ -36,7 +34,9 @@ export function buildHead(lang: Language) {
       { property: 'og:url', content: url },
       { property: 'og:title', content: t.seo.title },
       { property: 'og:description', content: t.seo.description },
-      { property: 'og:image', content: OG_IMAGE },
+      { property: 'og:image', content: ogImage(lang) },
+      { property: 'og:image:type', content: 'image/png' },
+      { property: 'og:image:alt', content: t.seo.title },
       { property: 'og:image:width', content: '1200' },
       { property: 'og:image:height', content: '630' },
       { property: 'og:locale', content: LOCALES[lang] },
@@ -44,7 +44,8 @@ export function buildHead(lang: Language) {
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:title', content: t.seo.title },
       { name: 'twitter:description', content: t.seo.description },
-      { name: 'twitter:image', content: OG_IMAGE },
+      { name: 'twitter:image', content: ogImage(lang) },
+      { name: 'twitter:image:alt', content: t.seo.title },
     ],
     links: [
       { rel: 'canonical', href: url },
@@ -67,9 +68,19 @@ function buildSchema(lang: Language) {
         '@id': `${SITE_URL}/#organization`,
         name: 'Kaede Project',
         url: SITE_URL,
-        logo: `${SITE_URL}/favicon-white.svg`,
+        logo: `${SITE_URL}/logo.png`,
+        image: ogImage(lang),
         description: t.seo.description,
+        telephone: CONTACT_PHONE,
+        contactPoint: {
+          '@type': 'ContactPoint',
+          contactType: 'sales',
+          telephone: CONTACT_PHONE,
+          url: WHATSAPP_URL,
+          availableLanguage: ['English', 'Spanish'],
+        },
         sameAs: SOCIAL_PROFILES,
+        hasOfferCatalog: { '@id': `${url}#web-plans` },
       },
       {
         '@type': 'WebSite',
@@ -104,6 +115,33 @@ function buildSchema(lang: Language) {
           })),
         },
       })),
+      // Fixed-price web plans as Offers; quote-only options are left out.
+      {
+        '@type': 'OfferCatalog',
+        '@id': `${url}#web-plans`,
+        name: t.webDev.tag.replace(/^\(\s*\d+\s*\)\s*/, ''),
+        itemListElement: t.webDev.options.flatMap((option) => {
+          const price = PLAN_PRICES[lang][option.id]
+          if (!price) return []
+          return [
+            {
+              '@type': 'Offer',
+              name: option.name,
+              description: option.description,
+              price: price.amount,
+              priceCurrency: price.currency,
+              url: `${url}#pricing`,
+              seller: { '@id': `${SITE_URL}/#organization` },
+              itemOffered: {
+                '@type': 'Service',
+                name: option.name,
+                description: option.description,
+                provider: { '@id': `${SITE_URL}/#organization` },
+              },
+            },
+          ]
+        }),
+      },
       {
         '@type': 'FAQPage',
         '@id': `${url}#faq`,
@@ -117,3 +155,4 @@ function buildSchema(lang: Language) {
     ],
   }
 }
+

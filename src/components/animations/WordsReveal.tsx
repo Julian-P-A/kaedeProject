@@ -1,5 +1,6 @@
-import { motion, useReducedMotion, type Variants } from 'framer-motion'
-import { VIEWPORT } from '#/components/animations/Reveal'
+import { useReducedMotion } from '#/hooks/useReducedMotion'
+import { motion, type Variants } from 'framer-motion'
+import { VIEWPORT, FOCUSED } from '#/components/animations/Reveal'
 
 const container: Variants = {
   hidden: {},
@@ -7,8 +8,8 @@ const container: Variants = {
 }
 
 const word: Variants = {
-  hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+  hidden: { opacity: 0, y: 18, filter: 'blur(8px)' },
+  show: { opacity: 1, y: 0, ...FOCUSED, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
 }
 
 /** Instrument Serif renders visually smaller/thinner than Manrope at the same size, so the accent is scaled up to read with equal weight. */
@@ -20,7 +21,7 @@ function parseWord(raw: string) {
   return { text: isAccent ? raw.slice(1, -1) : raw, isAccent }
 }
 
-/** Staggers a heading's words in on scroll, y 18→0 / opacity 0→1 per word. */
+/** Staggers a heading's words in on scroll, y 18→0 / opacity 0→1 / blur 8px→0 per word. */
 export function WordsReveal({
   text,
   className,
