@@ -74,7 +74,7 @@ export type ProcessStage = ProcessStageCopy & (
 
 export interface Translations {
   seo: { title: string; description: string }
-  nav: { links: NavLink[]; cta: string }
+  nav: { links: NavLink[]; cta: string; home: string; contactLabel: string }
   hero: {
     eyebrow: string
     title: string
@@ -100,7 +100,7 @@ export interface Translations {
     }
     disclaimer: string
   }
-  solutionsIntro: { tag: string; title: string; description: string }
+  solutionsIntro: { tag: string; title: string }
   services: Service[]
   serviceCards: ServiceCardCopy[]
   webDev: {
@@ -117,7 +117,7 @@ export interface Translations {
   }
   capabilities: { tag: string; items: string[] }
   projectsSection: { tag: string; title: string; items: Project[] }
-  about: { tag: string; statement: string; supporting: string }
+  about: { tag: string; statement: string }
   ecosystem: { tag: string; title: string }
   finalCta: {
     tag: string
@@ -168,10 +168,12 @@ export const translations: Record<Language, Translations> = {
         { label: 'Contact', href: '#contact' },
       ],
       cta: 'Start a project',
+      home: 'Home',
+      contactLabel: 'Contact us',
     },
     hero: {
-      eyebrow: 'Kaede Project / IT & AI consulting and development',
-      title: 'Let’s make your next project a *reality.*',
+      eyebrow: 'IT & AI consulting and development',
+      title: 'Your project, *made* *real.*',
       description:
         'We build your website, connect your CRM and automate customer service with AI, so your business sells more without more work.',
       ctaPrimary: 'Start your project',
@@ -197,9 +199,7 @@ export const translations: Record<Language, Translations> = {
     },
     solutionsIntro: {
       tag: '( 1 ) What we do',
-      title: 'IT and AI built around real business *goals.*',
-      description:
-        'We advise you on what to build, then we build it: websites, AI, automation and CRM that help you sell more, cut manual work and keep your whole business connected.',
+      title: 'IT and AI for *growth.*',
     },
     services: [
       {
@@ -277,7 +277,7 @@ export const translations: Record<Language, Translations> = {
     ],
     webDev: {
       tag: '( 2 ) Web Development',
-      title: 'One web service. Built around what your business actually *needs.*',
+      title: 'A website that *fits.*',
       bestForLabel: 'Best for',
       options: [
         {
@@ -341,7 +341,7 @@ export const translations: Record<Language, Translations> = {
     },
     process: {
       tag: '( 4 ) Process',
-      title: 'Consulting and development, in one *team.*',
+      title: 'From idea to *launch.*',
       stages: [
         {
           id: 'brief', title: 'Discover',
@@ -398,7 +398,7 @@ export const translations: Record<Language, Translations> = {
     },
     projectsSection: {
       tag: '( 6 ) Selected projects',
-      title: 'Real projects, real *scope.*',
+      title: 'Real *projects.*',
       items: [
         {
           id: 'fuego',
@@ -426,15 +426,14 @@ export const translations: Record<Language, Translations> = {
       tag: '( 7 ) About',
       statement:
         'We are the IT and AI partner for businesses that want to grow without complicating their operation: we advise you, build what you need and connect it so your business works as one system.',
-      supporting: 'From your website to AI and automation, one team for all of it.',
     },
     ecosystem: {
       tag: '( 3 ) Connected Ecosystem',
-      title: 'Your website, CRM, AI and team should work as *one* *system.*',
+      title: 'Your business, *connected.*',
     },
     finalCta: {
       tag: '( 9 ) Let’s talk',
-      title: 'Your next project *starts* *here.*',
+      title: 'Let’s talk about your *project.*',
       description: 'Tell us what your business needs. We’ll advise you on the best path and build it with you.',
       ctaPrimary: 'Let’s build it',
       ctaSecondary: 'Request a quote',
@@ -446,7 +445,7 @@ export const translations: Record<Language, Translations> = {
     },
     faq: {
       tag: '( 8 ) Frequently asked questions',
-      title: 'Everything you need to know before you *start.*',
+      title: 'Common *questions.*',
       items: [
         {
           question: 'How much does a website cost?',
@@ -622,10 +621,12 @@ export const translations: Record<Language, Translations> = {
         { label: 'Contacto', href: '#contact' },
       ],
       cta: 'Iniciar un proyecto',
+      home: 'Inicio',
+      contactLabel: 'Contáctanos',
     },
     hero: {
-      eyebrow: 'Kaede Project / Consultoría y desarrollo de TI e IA',
-      title: 'Hagamos *realidad* tu próximo proyecto.',
+      eyebrow: 'Consultoría y desarrollo de TI e IA',
+      title: 'Tu proyecto, *hecho* *realidad.*',
       description:
         'Creamos tu página web, conectamos tu CRM y automatizamos tu atención con IA, para que tu negocio venda más sin sumar más trabajo.',
       ctaPrimary: 'Inicia tu proyecto',
@@ -651,9 +652,7 @@ export const translations: Record<Language, Translations> = {
     },
     solutionsIntro: {
       tag: '( 1 ) Qué hacemos',
-      title: 'TI e IA al servicio de objetivos de negocio *reales.*',
-      description:
-        'Te asesoramos sobre qué construir y luego lo construimos: páginas web, IA, automatización y CRM que te ayudan a vender más, reducir el trabajo manual y mantener todo tu negocio conectado.',
+      title: 'TI e IA para *crecer.*',
     },
     services: [
       {
@@ -731,7 +730,7 @@ export const translations: Record<Language, Translations> = {
     ],
     webDev: {
       tag: '( 2 ) Desarrollo Web',
-      title: 'Un solo servicio web. Construido alrededor de lo que tu negocio realmente *necesita.*',
+      title: 'Una web a tu *medida.*',
       bestForLabel: 'Ideal para',
       options: [
         {
@@ -796,7 +795,7 @@ export const translations: Record<Language, Translations> = {
     },
     process: {
       tag: '( 4 ) Proceso',
-      title: 'Consultoría y desarrollo, en un solo *equipo.*',
+      title: 'Así creamos tu *proyecto.*',
       stages: [
         {
           id: 'brief', title: 'Descubrir',
@@ -853,7 +852,7 @@ export const translations: Record<Language, Translations> = {
     },
     projectsSection: {
       tag: '( 6 ) Proyectos seleccionados',
-      title: 'Proyectos reales, alcance *real.*',
+      title: 'Proyectos *reales.*',
       items: [
         {
           id: 'fuego',
@@ -881,15 +880,14 @@ export const translations: Record<Language, Translations> = {
       tag: '( 7 ) Nosotros',
       statement:
         'Somos el socio de TI e IA para empresas que quieren crecer sin complicar su operación: te asesoramos, construimos lo que necesitas y lo conectamos para que tu negocio funcione como un solo sistema.',
-      supporting: 'Desde tu página web hasta la IA y la automatización, un solo equipo para todo.',
     },
     ecosystem: {
       tag: '( 3 ) Ecosistema Conectado',
-      title: 'Tu página web, CRM, IA y equipo deberían funcionar como *un* *solo* *sistema.*',
+      title: 'Todo tu negocio, *conectado.*',
     },
     finalCta: {
       tag: '( 9 ) Hablemos',
-      title: 'Tu próximo proyecto *empieza* *aquí.*',
+      title: 'Hablemos de tu *proyecto.*',
       description: 'Cuéntanos qué necesita tu negocio. Te asesoramos sobre el mejor camino y lo construimos contigo.',
       ctaPrimary: 'Construyámoslo',
       ctaSecondary: 'Solicitar cotización',
@@ -901,7 +899,7 @@ export const translations: Record<Language, Translations> = {
     },
     faq: {
       tag: '( 8 ) Preguntas frecuentes',
-      title: 'Todo lo que necesitas saber antes de *empezar.*',
+      title: 'Preguntas *frecuentes.*',
       items: [
         {
           question: '¿Cuánto cuesta una página web?',

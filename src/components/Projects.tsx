@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
 import { useLanguage } from '#/context/LanguageContext'
-import { RiseReveal } from '#/components/animations/Reveal'
 import { WordsReveal } from '#/components/animations/WordsReveal'
 import type { ProjectId } from '#/data/translations'
 
@@ -15,11 +14,7 @@ export function Projects() {
   const { t } = useLanguage()
 
   return (
-    <section id="projects" className="mx-auto max-w-site px-5 py-24 sm:px-8 sm:py-32">
-      <RiseReveal className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-accent">
-        {t.projectsSection.tag}
-      </RiseReveal>
-
+    <section id="projects" className="mx-auto max-w-site px-6 py-24 sm:px-8 sm:py-32">
       <WordsReveal
         as="h2"
         text={t.projectsSection.title}

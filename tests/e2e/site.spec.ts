@@ -158,22 +158,212 @@ test('Spanish diagnostic reports network failure without claiming receipt', asyn
   await page.screenshot({ path: '/private/tmp/kaede-diagnostic-mobile.png' })
 })
 
-test('mobile menu closes at the CSS breakpoint and restores the previous scroll style', async ({ page }) => {
-  await page.setViewportSize({ width: 800, height: 800 })
-  await navigate(page, '/en')
-  await page.evaluate(() => {
-    document.body.style.overflow = 'auto'
-  })
+test('menu opens from the lower-left on desktop and mobile, and restores scrolling and focus', async ({ page }) => {
+  for (const width of [1920, 1440, 390, 320]) {
+    await page.setViewportSize({ width, height: 800 })
+    await navigate(page, '/en')
+    await page.evaluate(() => {
+      document.body.style.overflow = 'auto'
+    })
+    const trigger = page.getByRole('button', { name: 'Open menu', exact: true })
+    await expect(trigger).toHaveText('Menu')
+    const bounds = await trigger.boundingBox()
+    expect(bounds!.y).toBeGreaterThan(700)
+    expect(bounds!.height).toBeGreaterThanOrEqual(44)
+    const headerLogo = page.locator('header a').first()
+    await expect(headerLogo.locator('..')).toHaveCSS('transform', 'none')
+    const logoBefore = await headerLogo.boundingBox()
+    expect(bounds!.x).toBeCloseTo(logoBefore!.x, 1)
+    const languages = page.getByRole('group', { name: 'Language selector', exact: true })
+    await expect(languages).toHaveCSS('border-width', '0px')
+    await expect(languages).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)')
+    await expect(languages.getByRole('link', { name: 'ES', exact: true })).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)')
+    await expect(languages.getByRole('link', { name: 'EN', exact: true })).toHaveCSS('background-color', 'rgb(215, 255, 92)')
+    const floatingWhatsApp = page.getByRole('link', { name: 'Chat with us on WhatsApp', exact: true })
+    await expect(floatingWhatsApp).toHaveText('Message us')
+    expect((await floatingWhatsApp.boundingBox())!.height).toBeLessThanOrEqual(52)
+    await page.screenshot({ path: `/private/tmp/kaede-menu-${width}-closed.png` })
+
+    await trigger.click()
+    const menu = page.getByRole('dialog', { name: 'Navigation menu', exact: true })
+    await expect(menu).toBeVisible()
+    const logoOpen = await menu.getByRole('link', { name: 'Kaede Project', exact: true }).boundingBox()
+    expect(logoOpen!.x).toBeCloseTo(logoBefore!.x, 1)
+    expect(logoOpen!.y).toBeCloseTo(logoBefore!.y, 1)
+    expect(logoOpen!.width).toBeCloseTo(logoBefore!.width, 1)
+    const navigation = menu.getByRole('navigation', { name: 'Mobile', exact: true })
+    await expect(navigation.getByRole('link', { name: 'Home', exact: true })).toBeVisible()
+    const email = menu.getByRole('link', { name: 'hello@kaedeproject.com', exact: true })
+    await expect(email).toHaveAttribute('href', 'mailto:hello@kaedeproject.com')
+    await expect(email).toBeInViewport()
+    const menuWhatsApp = menu.getByRole('link', { name: 'Chat with us on WhatsApp', exact: true })
+    await expect(menuWhatsApp).toBeInViewport()
+    await expect(menuWhatsApp).toHaveAttribute('href', /^https:\/\/wa\.me\/573151883229/)
+    const menuWhatsAppBounds = await menuWhatsApp.boundingBox()
+    expect(menuWhatsAppBounds!.y + menuWhatsAppBounds!.height).toBeLessThan((await email.boundingBox())!.y)
+    await expect(page.locator('body')).toHaveCSS('overflow', 'hidden')
+    await expect(page.getByRole('main')).toHaveCount(0)
+    for (let index = 0; index < 10; index++) {
+      await page.keyboard.press(index < 5 ? 'Tab' : 'Shift+Tab')
+      await expect.poll(() => menu.evaluate((element) => element.contains(document.activeElement))).toBe(true)
+    }
+    await expect(menu.getByRole('link', { name: 'Contact', exact: true })).toHaveCSS('opacity', '1')
+    for (const link of await navigation.getByRole('link').all()) {
+      const linkBounds = await link.boundingBox()
+      expect(linkBounds!.x + linkBounds!.width / 2).toBeCloseTo(width / 2, 1)
+    }
+    await page.screenshot({ path: `/private/tmp/kaede-menu-${width}-open.png` })
+
+    // The same menu remains open when switching between mobile and desktop.
+    await page.setViewportSize({ width: width < 1024 ? 1440 : 390, height: 800 })
+    await expect(menu).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(menu).toHaveCount(0)
+    await expect(page.locator('body')).toHaveCSS('overflow', 'auto')
+    await expect(trigger).toBeFocused()
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false')
+
+    await trigger.click()
+    await page.getByRole('button', { name: 'Close menu', exact: true }).click()
+    await expect(menu).toHaveCount(0)
+    await expect(trigger).toBeFocused()
+
+    await trigger.click()
+    await menu.getByRole('link', { name: 'Solutions', exact: true }).click()
+    await expect(menu).toHaveCount(0)
+    await expect(page).toHaveURL(/\/en#solutions$/)
+    await expect(page.locator('body')).toHaveCSS('overflow', 'auto')
+  }
+
+  await navigate(page, '/es')
+  await expect(page.getByRole('link', { name: 'Escríbenos por WhatsApp', exact: true })).toHaveText('Escríbenos')
   await page.getByRole('button', { name: 'Open menu', exact: true }).click()
-  await expect(page.locator('body')).toHaveCSS('overflow', 'hidden')
-  // rem media queries use the browser initial font, independently of html's font size.
-  await page.setViewportSize({ width: 1023, height: 800 })
-  await expect(page.getByRole('button', { name: 'Close menu' })).toBeVisible()
-  await page.setViewportSize({ width: 1024, height: 800 })
-  await expect(page.locator('body')).toHaveCSS('overflow', 'auto')
-  await page.setViewportSize({ width: 800, height: 800 })
-  await expect(page.getByRole('button', { name: 'Open menu', exact: true })).toHaveAttribute('aria-expanded', 'false')
-  await expect(page.getByRole('button', { name: 'Close menu' })).toHaveCount(0)
+  const spanishMenu = page.getByRole('dialog', { name: 'Menú de navegación', exact: true })
+  await expect(spanishMenu.getByRole('link', { name: 'Contacto', exact: true })).toHaveCSS('opacity', '1')
+  await expect(spanishMenu.getByRole('link', { name: 'Escríbenos por WhatsApp', exact: true })).toBeInViewport()
+  await page.screenshot({ path: '/private/tmp/kaede-menu-es-open.png' })
+  await page.keyboard.press('Escape')
+  await expect(spanishMenu).toHaveCount(0)
+})
+
+test('hero sharpens and shrinks on return, and blurs and grows as it leaves upward', async ({ page }) => {
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 900 })
+    await page.emulateMedia({ reducedMotion: 'no-preference' })
+    await navigate(page, '/es')
+    await page.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }))
+    const hero = page.locator('main > section').first()
+    const stage = hero.locator(':scope > div')
+    const entrance = stage.locator(':scope > div')
+    const state = () => stage.evaluate((element) => {
+      const css = getComputedStyle(element)
+      const transform = new DOMMatrixReadOnly(css.transform)
+      return { blur: Number(/blur\(([\d.]+)px\)/.exec(css.filter)?.[1] || 0), scale: transform.a, y: transform.f }
+    })
+
+    await expect(entrance).toHaveCSS('filter', 'blur(0px)')
+    await expect.poll(async () => (await state()).scale).toBeCloseTo(1, 2)
+    await page.screenshot({ path: `/private/tmp/kaede-hero-focus-${width}.png` })
+    const height = await hero.evaluate((element) => element.getBoundingClientRect().height)
+    await page.evaluate((top) => scrollTo({ top, behavior: 'instant' }), height * 0.4)
+    await expect.poll(async () => (await state()).blur).toBeLessThan(0.1)
+    expect((await state()).scale).toBeCloseTo(1, 2)
+    await page.evaluate((top) => scrollTo({ top, behavior: 'instant' }), height * 0.7)
+    await expect.poll(async () => (await state()).blur).toBeGreaterThan(2)
+    const exit = await state()
+    expect(exit.scale).toBeGreaterThan(1.01)
+    expect(exit.y).toBeLessThan(0)
+
+    await page.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }))
+    await expect.poll(async () => (await state()).blur).toBeLessThan(0.1)
+    expect((await state()).scale).toBeCloseTo(1, 2)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width)
+
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.evaluate((top) => scrollTo({ top, behavior: 'instant' }), height * 0.4)
+    await expect(stage).toHaveCSS('filter', 'none')
+    await expect(stage).toHaveCSS('opacity', '1')
+    expect((await state()).scale).toBeCloseTo(1, 2)
+  }
+})
+
+test('second section sharpens while shrinking in, then blurs and grows as it leaves upward', async ({ page }) => {
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 900 })
+    await page.emulateMedia({ reducedMotion: 'no-preference' })
+    await navigate(page, '/es')
+    const about = page.locator('#about')
+    await expect(page.locator('main > section').nth(1)).toHaveAttribute('id', 'about')
+    const geometry = await about.evaluate((element) => ({ top: element.getBoundingClientRect().top + scrollY, height: element.getBoundingClientRect().height }))
+    const panel = about.locator(':scope > div')
+    expect((await panel.boundingBox())!.height).toBeCloseTo(900, 0)
+    const copy = about.locator('h2').locator('..')
+    const state = () => copy.evaluate((element) => {
+      const css = getComputedStyle(element)
+      const transform = new DOMMatrixReadOnly(css.transform)
+      return { blur: Number(/blur\(([\d.]+)px\)/.exec(css.filter)?.[1] || 0), scale: transform.a, y: transform.f }
+    })
+
+    await page.evaluate((top) => scrollTo({ top, behavior: 'instant' }), geometry.top - 585)
+    await expect.poll(async () => (await state()).blur).toBeGreaterThan(2)
+    const entrance = await state()
+    expect(entrance.scale).toBeGreaterThan(1.08)
+    expect(entrance.y).toBeGreaterThan(0)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width)
+
+    // It is already sharp on arrival and stays fixed through a short reading pause.
+    await page.evaluate((top) => scrollTo({ top, behavior: 'instant' }), geometry.top - 180)
+    await expect.poll(async () => (await state()).blur).toBeLessThan(0.1)
+    await page.evaluate((top) => scrollTo({ top, behavior: 'instant' }), geometry.top + 72)
+    await expect.poll(async () => (await panel.boundingBox())!.y).toBeCloseTo(0, 0)
+    const pinned = await copy.boundingBox()
+    await page.evaluate((top) => scrollTo({ top, behavior: 'instant' }), geometry.top + 288)
+    await expect.poll(async () => (await copy.boundingBox())!.y).toBeCloseTo(pinned!.y, 0)
+    await expect.poll(async () => (await state()).blur).toBeLessThan(0.1)
+    await page.screenshot({ path: `/private/tmp/kaede-about-pinned-${width}.png` })
+
+    await page.evaluate((top) => scrollTo({ top, behavior: 'instant' }), geometry.top + 540)
+    await expect.poll(async () => (await state()).blur).toBeLessThan(0.1)
+    expect((await panel.boundingBox())!.y).toBeLessThan(0)
+    await page.evaluate((top) => scrollTo({ top, behavior: 'instant' }), geometry.top + 900)
+    await expect.poll(async () => (await state()).blur).toBeGreaterThan(2)
+    const exit = await state()
+    expect(exit.scale).toBeGreaterThan(1.08)
+    expect(exit.y).toBeLessThan(0)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width)
+
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await expect(copy).toHaveCSS('filter', 'none')
+    await expect(copy).toHaveCSS('opacity', '1')
+    await expect.poll(async () => (await about.boundingBox())!.height).toBeCloseTo(900, 0)
+  }
+})
+
+test('mobile footer keeps the legal copy closer to its bounded fire', async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 })
+    await navigate(page, '/es')
+    const footer = page.locator('footer')
+    await footer.evaluate((element) => element.scrollIntoView({ block: 'end', behavior: 'instant' }))
+    const geometry = await footer.evaluate((element) => {
+      const paragraphs = element.querySelectorAll('p')
+      const last = paragraphs[paragraphs.length - 1]
+      return {
+        gap: element.getBoundingClientRect().bottom - last.getBoundingClientRect().bottom,
+        fireHeight: element.querySelector('canvas')!.getBoundingClientRect().height,
+        height: element.getBoundingClientRect().height,
+      }
+    })
+    expect(geometry.fireHeight).toBe(180)
+    expect(geometry.gap).toBeGreaterThan(140)
+    if (width === 390) {
+      expect(geometry.gap).toBeLessThan(160)
+      await page.screenshot({ path: '/private/tmp/kaede-footer-closer-mobile.png' })
+    } else {
+      expect(geometry.gap).toBeGreaterThan(170)
+      expect(geometry.height).toBeCloseTo(900, 0)
+    }
+  }
 })
 
 test('explicit URLs override the browser language and root negotiates priority', async ({ page, request }) => {

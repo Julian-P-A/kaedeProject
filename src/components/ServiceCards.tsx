@@ -187,7 +187,7 @@ export function ServiceCards() {
   const visuals = [<BrowserLayersVisual key="a" />, <AiFlowVisual key="b" />, <ConnectFlowVisual key="c" />]
 
   return (
-    <section className="mx-auto max-w-site px-5 pb-24 sm:px-8 sm:pb-32">
+    <section className="mx-auto max-w-site px-6 pb-24 sm:px-8 sm:pb-32">
       <div className="grid gap-5 md:grid-cols-3">
         {t.serviceCards.map((card, i) => (
           <ServiceCard

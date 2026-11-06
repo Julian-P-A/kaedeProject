@@ -40,9 +40,7 @@ export function Process() {
   return (
     <section id="process" ref={sectionRef} className="process-scroll relative scroll-mt-0">
       <div className="process-scene">
-        <div className="mx-auto w-full max-w-site px-5 sm:px-8">
-          <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-accent">{t.process.tag}</p>
-
+        <div className="mx-auto w-full max-w-site px-6 sm:px-8">
           <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-14">
             <div>
               <WordsReveal

@@ -7,20 +7,12 @@ export function Solutions() {
   const { t } = useLanguage()
 
   return (
-    <section id="solutions" className="mx-auto max-w-site scroll-mt-28 px-5 py-24 sm:px-8 sm:py-32">
-      <RiseReveal className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-accent">
-        {t.solutionsIntro.tag}
-      </RiseReveal>
-
+    <section id="solutions" className="mx-auto max-w-site scroll-mt-28 px-6 py-24 sm:px-8 sm:py-32">
       <WordsReveal
         as="h2"
         text={t.solutionsIntro.title}
         className="max-w-3xl text-balance font-display text-3xl font-semibold leading-tight tracking-tight sm:text-5xl"
       />
-
-      <RiseReveal delay={0.15} className="mt-6 max-w-2xl text-balance text-base text-muted sm:text-lg">
-        {t.solutionsIntro.description}
-      </RiseReveal>
 
       <div className="mt-16 divide-y divide-border border-t border-border">
         {t.services.map((service) => (

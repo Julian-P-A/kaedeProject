@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useLanguage } from '#/context/LanguageContext'
-import { RiseReveal } from '#/components/animations/Reveal'
 import { WordsReveal } from '#/components/animations/WordsReveal'
 
 export function Faq() {
@@ -8,11 +7,7 @@ export function Faq() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <section id="faq" className="mx-auto max-w-4xl scroll-mt-28 px-5 py-24 sm:px-8 sm:py-32">
-      <RiseReveal className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-accent">
-        {t.faq.tag}
-      </RiseReveal>
-
+    <section id="faq" className="mx-auto max-w-4xl scroll-mt-28 px-6 py-24 sm:px-8 sm:py-32">
       <WordsReveal
         as="h2"
         text={t.faq.title}

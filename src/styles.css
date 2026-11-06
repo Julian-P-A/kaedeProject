@@ -39,7 +39,7 @@
   --font-serif: "Instrument Serif", serif;
 
   /* Page container width (header, sections, footer) — `max-w-site`. */
-  --container-site: 95rem;
+  --container-site: 110rem;
 
   /* `backwards`, not `both`: the end state equals the element's own styles, and
      holding it would leave a blur(0px) filter (and its GPU layer) behind. */
@@ -81,9 +81,24 @@ body,
 }
 
 html {
+  --site-gutter: 1.5rem;
   background: var(--color-background);
   color-scheme: dark;
   scroll-behavior: smooth;
+}
+
+@media (min-width: 40rem) {
+  html {
+    --site-gutter: 2rem;
+  }
+}
+
+.site-floating-left {
+  left: calc(max(0px, (100vw - var(--container-site)) / 2) + var(--site-gutter) + env(safe-area-inset-left, 0px));
+}
+
+.site-floating-right {
+  right: calc(max(0px, (100vw - var(--container-site)) / 2) + var(--site-gutter) + env(safe-area-inset-right, 0px));
 }
 
 /* Desktop reads like the browser at 80% zoom: Tailwind sizes are rem-based,

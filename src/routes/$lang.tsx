@@ -5,11 +5,9 @@ import { buildHead, isLanguage } from '#/lib/seo'
 import { Header } from '#/components/Header'
 import { Hero } from '#/components/Hero'
 import { Solutions } from '#/components/Solutions'
-import { ServiceCards } from '#/components/ServiceCards'
 import { WebDevelopment } from '#/components/WebDevelopment'
 import { DigitalEcosystem } from '#/components/DigitalEcosystem'
 import { Process } from '#/components/Process'
-import { Capabilities } from '#/components/Capabilities'
 import { Projects } from '#/components/Projects'
 import { About } from '#/components/About'
 import { Faq } from '#/components/Faq'
@@ -35,18 +33,17 @@ function Home() {
           <Header />
           <main>
             <Hero />
+            <About />
             <Solutions />
-            <ServiceCards />
             <WebDevelopment />
             <DigitalEcosystem />
             <Process />
-            <Capabilities />
             <Projects />
-            <About />
             <Faq />
-            <FinalCTA />
           </main>
-          <Footer />
+          <Footer>
+            <FinalCTA />
+          </Footer>
           <FloatingWhatsApp />
         </div>
       </DiagnosticProvider>

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useLanguage } from '#/context/LanguageContext'
-import { RiseReveal, StaggerGroup, staggerItem } from '#/components/animations/Reveal'
+import { StaggerGroup, staggerItem } from '#/components/animations/Reveal'
 
 const ICONS = ['◆', '◇', '●', '○', '▲', '△', '■', '□']
 
@@ -9,10 +9,6 @@ export function Capabilities() {
 
   return (
     <section className="mx-auto max-w-site px-5 py-24 sm:px-8 sm:py-32">
-      <RiseReveal className="mb-10 text-xs font-medium uppercase tracking-[0.2em] text-accent">
-        {t.capabilities.tag}
-      </RiseReveal>
-
       <StaggerGroup className="flex flex-wrap gap-3">
         {t.capabilities.items.map((item, i) => (
           <motion.div
