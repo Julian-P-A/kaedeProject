@@ -225,7 +225,7 @@ http://localhost:3000
 Para ejecutar las pruebas E2E por primera vez puede ser necesario instalar Chromium:
 
 ```bash
-npx playwright install chromium
+npx playwright install chromium webkit
 npm run test:e2e
 ```
 

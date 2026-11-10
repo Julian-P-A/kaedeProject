@@ -1,10 +1,18 @@
-import { defineConfig } from '@playwright/test'
+import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: false,
   workers: 1,
   reporter: 'list',
+  projects: [
+    { name: 'chromium' },
+    {
+      name: 'webkit-iphone',
+      testMatch: '**/ascii-video.spec.ts',
+      use: { ...devices['iPhone 13'], browserName: 'webkit', launchOptions: {} },
+    },
+  ],
   use: {
     baseURL: 'http://127.0.0.1:3100',
     browserName: 'chromium',

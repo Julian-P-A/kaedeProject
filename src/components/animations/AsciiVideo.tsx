@@ -8,7 +8,9 @@ import { ASCII_CELL_SIZE, ASCII_FONT_FAMILY, ASCII_MAX_DPR, ASCII_RAMP } from '.
  * canvas. The clip is a luminance map; a cached glyph atlas preserves both
  * character density and brightness, with a little local sharpening for relief.
  *
- * `src` is the path without extension; MP4 is preferred, with WebM fallback.
+ * `src` is the path without extension; WebM and MP4 are used for playback.
+ * A matching WebP poster keeps the ASCII visible before decoding, or
+ * when browser playback policies prevent the video from starting.
  * `mobileSrc`, if given, replaces it below the `sm` breakpoint (640px), so
  * phones download only their own (typically tighter, coarser) clip.
  * Draws only when the video presents a new frame, pauses while off-screen and
@@ -86,6 +88,7 @@ export function AsciiVideo({
   useEffect(() => {
     const canvas = canvasRef.current
     const video = videoRef.current
+    const poster = new Image()
     const ctx = canvas?.getContext('2d')
     const sample = document.createElement('canvas').getContext('2d', { willReadFrequently: true })
     if (!activeSrc || !canvas || !video || !ctx || !sample) return
@@ -107,22 +110,24 @@ export function AsciiVideo({
 
     const layout = () => {
       const width = canvas.clientWidth
-      if (!video.videoWidth || !width) return
+      const imageWidth = video.videoWidth || poster.naturalWidth
+      const imageHeight = video.videoHeight || poster.naturalHeight
+      if (!imageWidth || !width) return
       layoutWidth = width
       const probeFont = (size: number) => `${size}px ${ASCII_FONT_FAMILY}`
       ctx.font = probeFont(100)
       const aspect = ctx.measureText('M').width / 100
       const dpr = Math.min(window.devicePixelRatio || 1, ASCII_MAX_DPR)
       const pixelWidth = Math.round(width * dpr)
-      const targetCols = Math.min(Math.round(video.videoWidth * 1.5), Math.max(1, Math.floor(width / (Math.max(1, cellSize) * aspect))))
+      const targetCols = Math.min(Math.round(imageWidth * 1.5), Math.max(1, Math.floor(width / (Math.max(1, cellSize) * aspect))))
       // Every cell has the same integer width on the backing canvas. Rounding
       // each position separately alternates narrow/wide gaps and creates bands.
       cellW = Math.max(1, Math.ceil(pixelWidth / targetCols))
       cellH = Math.max(1, Math.round(Math.max(cellSize * dpr, cellW / aspect)))
       cols = Math.max(1, Math.floor(pixelWidth / cellW))
       // Adjust the sample rows for the snapped cells, preserving the silhouette.
-      const imageHeight = cols * cellW * video.videoHeight / video.videoWidth / aspect
-      rows = Math.max(1, Math.round(imageHeight / cellH))
+      const renderedHeight = cols * cellW * imageHeight / imageWidth / aspect
+      rows = Math.max(1, Math.round(renderedHeight / cellH))
       offsetX = Math.floor((pixelWidth - cols * cellW) / 2)
       sample.canvas.width = cols
       sample.canvas.height = rows
@@ -194,8 +199,9 @@ export function AsciiVideo({
     }
 
     const draw = () => {
-      if (video.readyState < 2 || !cellH || !atlas) return
-      sample.drawImage(video, 0, 0, cols, rows)
+      const frame = video.readyState >= 2 ? video : poster.complete && poster.naturalWidth ? poster : null
+      if (!frame || !cellH || !atlas) return
+      sample.drawImage(frame, 0, 0, cols, rows)
       const px = sample.getImageData(0, 0, cols, rows).data
       const spread = reduce ? 0 : Math.pow(Math.max(0, Math.min(1, dispersion?.get() ?? 0)), 1.4)
       ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -293,9 +299,14 @@ export function AsciiVideo({
       layout()
       update()
     }
+    // iOS may preload metadata without decoding a frame. Layout and seeking
+    // can start at that point; the WebP supplies pixels until decoding finishes.
+    video.addEventListener('loadedmetadata', onReady)
     video.addEventListener('loadeddata', onReady)
     video.addEventListener('seeked', onSeeked)
-    if (video.readyState >= 2) onReady()
+    poster.addEventListener('load', layout)
+    poster.src = `${activeSrc}.webp`
+    if (video.readyState >= 1) onReady()
     observer.observe(canvas)
     resizeObserver.observe(canvas)
 
@@ -307,6 +318,8 @@ export function AsciiVideo({
       unsubscribeDispersion?.()
       observer.disconnect()
       resizeObserver.disconnect()
+      poster.removeEventListener('load', layout)
+      video.removeEventListener('loadedmetadata', onReady)
       video.removeEventListener('loadeddata', onReady)
       video.removeEventListener('seeked', onSeeked)
     }
@@ -325,8 +338,8 @@ export function AsciiVideo({
         aria-hidden="true"
         className="pointer-events-none absolute h-px w-px opacity-0"
       >
-        {activeSrc && <source src={`${activeSrc}.mp4`} type="video/mp4" />}
         {activeSrc && <source src={`${activeSrc}.webm`} type="video/webm" />}
+        {activeSrc && <source src={`${activeSrc}.mp4`} type="video/mp4" />}
       </video>
     </div>
   )

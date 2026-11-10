@@ -3,8 +3,9 @@
  * Bakes a video into a tiny "ASCII-ready" clip for <AsciiVideo />: background
  * removed, zoom applied and scaled so each pixel is one character. The browser
  * then only maps pixel brightness to a character, with no keying or scaling.
- * Writes <output>.webm (VP9) and <output>.mp4 (H.264). Compare their sizes when
- * selecting a preferred source; all-keyframe clips can be smaller in H.264.
+ * Writes <output>.webm (VP9), <output>.mp4 (H.264), and a lossless poster
+ * <output>.webp so the artwork is visible before video decoding is available.
+ * Requires an ffmpeg build with libvpx-vp9, libx264 and libwebp encoders.
  *
  * Usage:
  *   node scripts/ascii-export.mjs <input> <output-without-extension> [options]
@@ -113,3 +114,14 @@ for (const [ext, codec] of Object.entries(encoders)) {
   }
   console.log(`${file} · ${cols}×${rows} chars · ${fps} fps · ${(statSync(file).size / 1024).toFixed(0)} KB`)
 }
+
+const posterFile = `${output}.webp`
+const poster = spawnSync('ffmpeg', [
+  '-v', 'error', '-y', '-i', `${output}.webm`, '-vf', 'thumbnail=60', '-frames:v', '1', '-an',
+  '-c:v', 'libwebp', '-lossless', '1', '-compression_level', '6', posterFile,
+])
+if (poster.status !== 0) {
+  console.error(poster.stderr.toString())
+  process.exit(1)
+}
+console.log(`${posterFile} · poster · ${(statSync(posterFile).size / 1024).toFixed(0)} KB`)
