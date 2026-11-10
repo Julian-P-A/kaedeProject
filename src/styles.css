@@ -197,8 +197,7 @@ h4 {
 @media (max-width: 63.999rem) {
   .hero-scene { padding-top: 6rem; padding-bottom: 6rem; }
   #top { background: var(--color-background); }
-  .hero-content { order: 0; }
-  .hero-art { position: relative; inset: auto; z-index: auto; order: 1; align-self: center; width: min(112vw, 40rem); margin: 2rem 0 0; translate: none; transform: none; }
+  .hero-art { width: min(112vw, 40rem); }
   .hero-copy { max-width: 38rem; margin-inline: auto; }
   .hero-title { font-size: clamp(2rem, 5.7vw, 3rem); }
   .hero-actions { margin-top: 1.5rem; }

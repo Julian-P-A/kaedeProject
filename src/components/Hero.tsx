@@ -25,19 +25,7 @@ export function Hero() {
           animate={{ scale: 1, filter: 'blur(0px)', y: 0 }}
           transition={{ duration: reduce ? 0 : 1, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* The illustration has its own row on phones and tablets. */}
-          <div
-            aria-hidden="true"
-            className="hero-art pointer-events-none absolute -right-[30%] top-[58%] -z-10 w-full -translate-y-1/2 [mask-image:linear-gradient(to_bottom,black_85%,transparent)]"
-          >
-            <AsciiVideo src="/ascii/creation" eager className="w-full text-foreground opacity-80" />
-          </div>
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 hidden h-1/2 bg-linear-to-t from-background from-10% via-background/70 via-40% to-transparent lg:block"
-          />
-
-          <div className="hero-content relative mx-auto w-full max-w-site px-6 sm:px-8">
+          <div className="hero-content relative mx-auto w-full max-w-site shrink-0 px-6 sm:px-8">
             <div className="hero-copy max-w-2xl text-center lg:max-w-[48%] lg:text-left">
               <p className="animate-fade-up mb-6 inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-muted">
                 {t.hero.eyebrow}
@@ -77,6 +65,18 @@ export function Hero() {
               </div>
             </div>
           </div>
+
+          {/* Normal document flow on mobile; background artwork only on desktop. */}
+          <div
+            aria-hidden="true"
+            className="hero-art pointer-events-none relative mt-8 w-full shrink-0 self-center [mask-image:linear-gradient(to_bottom,black_85%,transparent)] lg:absolute lg:-right-[30%] lg:top-[58%] lg:-z-10 lg:mt-0 lg:-translate-y-1/2"
+          >
+            <AsciiVideo src="/ascii/creation" eager className="w-full text-foreground opacity-80" />
+          </div>
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 hidden h-1/2 bg-linear-to-t from-background from-10% via-background/70 via-40% to-transparent lg:block"
+          />
         </motion.div>
       </motion.div>
     </section>

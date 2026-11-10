@@ -42,6 +42,9 @@ for (const playbackAvailable of [true, false]) {
     }
     await page.locator('.hero-art canvas').scrollIntoViewIfNeeded()
     await expectArtwork('.hero-art canvas')
+    const copy = (await page.locator('.hero-copy').boundingBox())!
+    const artwork = (await page.locator('.hero-art canvas').boundingBox())!
+    expect(artwork.y - (copy.y + copy.height)).toBeGreaterThanOrEqual(24)
     if (playbackAvailable) {
       await expect.poll(() => page.locator('.hero-art video').evaluate((video: HTMLVideoElement) => video.currentTime)).toBeGreaterThan(0.1)
     }
@@ -60,7 +63,7 @@ for (const playbackAvailable of [true, false]) {
         await expect.poll(() => video.evaluate((video: HTMLVideoElement) => video.readyState)).toBeGreaterThanOrEqual(2)
         await expect(video).toHaveJSProperty('seeking', false)
         await expect(video).toHaveJSProperty('paused', true)
-        expect(await video.evaluate((video: HTMLVideoElement) => video.currentTime)).toBeGreaterThan(0.1)
+        await expect.poll(() => video.evaluate((video: HTMLVideoElement) => video.currentTime)).toBeGreaterThan(0.1)
       }
     }
     await page.locator('#faq canvas').scrollIntoViewIfNeeded()
