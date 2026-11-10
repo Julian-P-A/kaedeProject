@@ -30,7 +30,7 @@ export function Hero() {
             aria-hidden="true"
             className="hero-art pointer-events-none absolute -right-[30%] top-[58%] -z-10 w-full -translate-y-1/2 [mask-image:linear-gradient(to_bottom,black_85%,transparent)]"
           >
-            <AsciiVideo src="/ascii/creation" className="w-full text-foreground opacity-80" />
+            <AsciiVideo src="/ascii/creation" eager className="w-full text-foreground opacity-80" />
           </div>
           <div
             aria-hidden="true"

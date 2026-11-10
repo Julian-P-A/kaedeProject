@@ -1,6 +1,7 @@
-import { createContext, useContext, useRef, useState, type ReactNode } from 'react'
-import { Diagnostic } from '#/components/Diagnostic'
+import { createContext, lazy, Suspense, useContext, useRef, useState, type ReactNode } from 'react'
 import { useHydrated } from '#/hooks/useHydrated'
+
+const Diagnostic = lazy(() => import('#/components/Diagnostic').then(module => ({ default: module.Diagnostic })))
 
 interface DiagnosticContextValue {
   openDiagnostic: () => void
@@ -11,6 +12,7 @@ const DiagnosticContext = createContext<DiagnosticContextValue | null>(null)
 
 export function DiagnosticProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false)
+  const [hasOpened, setHasOpened] = useState(false)
   const returnFocusRef = useRef<HTMLElement | null>(null)
   const ready = useHydrated()
 
@@ -20,12 +22,17 @@ export function DiagnosticProvider({ children }: { children: ReactNode }) {
         ready,
         openDiagnostic: () => {
           returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
+          setHasOpened(true)
           setOpen(true)
         },
       }}
     >
       {children}
-      <Diagnostic open={open} onClose={() => setOpen(false)} returnFocusRef={returnFocusRef} />
+      {hasOpened && (
+        <Suspense fallback={null}>
+          <Diagnostic open={open} onClose={() => setOpen(false)} returnFocusRef={returnFocusRef} />
+        </Suspense>
+      )}
     </DiagnosticContext.Provider>
   )
 }

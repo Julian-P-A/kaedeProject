@@ -1,6 +1,6 @@
 import { useReducedMotion } from '#/hooks/useReducedMotion'
 import { useEffect, useRef, useState } from 'react'
-import type { MotionValue } from 'framer-motion'
+import { useInView, type MotionValue } from 'framer-motion'
 import { ASCII_CELL_SIZE, ASCII_FONT_FAMILY, ASCII_MAX_DPR, ASCII_RAMP } from './asciiStyle'
 
 /**
@@ -8,7 +8,7 @@ import { ASCII_CELL_SIZE, ASCII_FONT_FAMILY, ASCII_MAX_DPR, ASCII_RAMP } from '.
  * canvas. The clip is a luminance map; a cached glyph atlas preserves both
  * character density and brightness, with a little local sharpening for relief.
  *
- * `src` is the path without extension; `<src>.webm` and `<src>.mp4` are used.
+ * `src` is the path without extension; MP4 is preferred, with WebM fallback.
  * `mobileSrc`, if given, replaces it below the `sm` breakpoint (640px), so
  * phones download only their own (typically tighter, coarser) clip.
  * Draws only when the video presents a new frame, pauses while off-screen and
@@ -22,6 +22,7 @@ export function AsciiVideo({
   mobileSrc,
   className,
   label,
+  eager = false,
   speed = 1,
   loop = true,
   ramp = ASCII_RAMP,
@@ -36,6 +37,8 @@ export function AsciiVideo({
   mobileSrc?: string
   className?: string
   label?: string
+  /** Load immediately for artwork in the first viewport. */
+  eager?: boolean
   /** Playback speed (1 = normal). */
   speed?: number
   loop?: boolean
@@ -54,13 +57,17 @@ export function AsciiVideo({
   /** Opens individual glyphs away from their grid, from 0 to 1. */
   dispersion?: MotionValue<number>
 }) {
+  const containerRef = useRef<HTMLDivElement | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const reduce = useReducedMotion()
+  const nearby = useInView(containerRef, { once: true, margin: '300px' })
+  const shouldLoad = eager || nearby
   // Picked after mount (no sources during SSR) so only one clip is downloaded.
   const [activeSrc, setActiveSrc] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!shouldLoad) return
     if (!mobileSrc) {
       setActiveSrc(src)
       return
@@ -70,7 +77,7 @@ export function AsciiVideo({
     pick()
     query.addEventListener('change', pick)
     return () => query.removeEventListener('change', pick)
-  }, [src, mobileSrc])
+  }, [src, mobileSrc, shouldLoad])
 
   useEffect(() => {
     if (videoRef.current) videoRef.current.playbackRate = speed
@@ -306,7 +313,7 @@ export function AsciiVideo({
   }, [activeSrc, reduce, ramp, cellSize, contrast, gamma, sharpness, progress, dispersion])
 
   return (
-    <div className={className ?? 'w-full'}>
+    <div ref={containerRef} className={className ?? 'w-full'}>
       <canvas ref={canvasRef} className="block w-full" role="img" aria-label={label} />
       <video
         key={activeSrc ?? 'none'}
@@ -314,12 +321,12 @@ export function AsciiVideo({
         muted
         loop={loop}
         playsInline
-        preload="auto"
+        preload={activeSrc ? 'auto' : 'none'}
         aria-hidden="true"
         className="pointer-events-none absolute h-px w-px opacity-0"
       >
-        {activeSrc && <source src={`${activeSrc}.webm`} type="video/webm" />}
         {activeSrc && <source src={`${activeSrc}.mp4`} type="video/mp4" />}
+        {activeSrc && <source src={`${activeSrc}.webm`} type="video/webm" />}
       </video>
     </div>
   )

@@ -54,6 +54,18 @@ async function fillDiagnostic(page: Page, lang: 'en' | 'es' = 'en') {
   return opened
 }
 
+test('diagnostic code is downloaded only when the form is requested', async ({ page }) => {
+  const modules: string[] = []
+  page.on('request', request => {
+    if (/\/Diagnostic(?:\.tsx|-[\w-]+\.js)(?:\?|$)/.test(request.url())) modules.push(request.url())
+  })
+  await navigate(page, '/en')
+  expect(modules).toHaveLength(0)
+  await page.getByRole('button', { name: 'Take the quick diagnostic', exact: true }).click()
+  await expect(page.getByRole('dialog')).toBeVisible()
+  expect(modules).toHaveLength(1)
+})
+
 test('pending delivery shows the diagnosis, rejects false success and retries once with the same data', async ({
   page,
 }) => {

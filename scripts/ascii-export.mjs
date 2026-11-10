@@ -3,7 +3,8 @@
  * Bakes a video into a tiny "ASCII-ready" clip for <AsciiVideo />: background
  * removed, zoom applied and scaled so each pixel is one character. The browser
  * then only maps pixel brightness to a character, with no keying or scaling.
- * Writes <output>.webm (VP9, smallest) and <output>.mp4 (H.264, Safari fallback).
+ * Writes <output>.webm (VP9) and <output>.mp4 (H.264). Compare their sizes when
+ * selecting a preferred source; all-keyframe clips can be smaller in H.264.
  *
  * Usage:
  *   node scripts/ascii-export.mjs <input> <output-without-extension> [options]
