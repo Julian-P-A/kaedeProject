@@ -16,16 +16,19 @@ export function About() {
   const y = useTransform(scrollYProgress, points, [24, 12, 0, 0, -12, -32])
 
   return (
-    <section id="about" ref={section} className={`relative overflow-x-clip ${reduce ? 'min-h-svh' : 'h-[140svh]'}`}>
-      <div className="sticky top-0 mx-auto flex h-svh max-w-site items-center justify-center px-6 py-16 text-center sm:px-8 sm:py-20">
+    <section id="about" ref={section} className={`about-section relative overflow-x-clip ${reduce ? 'min-h-svh' : 'h-[140svh]'}`}>
+      <div className="about-scene sticky top-0 mx-auto h-svh max-w-site text-center">
         <motion.div
-          className="mx-auto w-full max-w-5xl"
+          className="about-frame relative flex h-full w-full items-center justify-center px-6 py-16 sm:px-8 sm:py-20"
           style={reduce ? { scale: 1, filter: 'none', opacity: 1, y: 0 } : { scale, filter, opacity, y }}
         >
-          <ScrollFillText
-            text={t.about.statement}
-            className="text-balance font-display text-3xl font-semibold leading-tight tracking-tight sm:text-5xl"
-          />
+          <div className="about-copy relative mx-auto w-full max-w-5xl">
+            <ScrollFillText
+              text={t.about.statement}
+              highlights={t.about.highlights}
+              className="about-statement text-balance font-display text-3xl font-semibold leading-tight tracking-tight sm:text-5xl"
+            />
+          </div>
         </motion.div>
       </div>
     </section>

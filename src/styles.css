@@ -186,26 +186,322 @@ h4 {
   color: transparent;
 }
 
-/* Native page scrolling advances the six stages while this scene stays in view. */
-.process-scroll {
-  height: 375svh;
+.scroll-fill-highlight {
+  display: inline-block;
+  padding: 0 0.12em 0.035em;
+  background: var(--color-accent);
+  color: var(--color-accent-foreground);
+  line-height: 1.12;
 }
 
-.process-scene {
+@media (max-width: 63.999rem) {
+  .hero-scene { padding-top: 6rem; padding-bottom: 6rem; }
+  #top { background: var(--color-background); }
+  .hero-content { order: 0; }
+  .hero-art { position: relative; inset: auto; z-index: auto; order: 1; align-self: center; width: min(112vw, 40rem); margin: 2rem 0 0; translate: none; transform: none; }
+  .hero-copy { max-width: 38rem; margin-inline: auto; }
+  .hero-title { font-size: clamp(2rem, 5.7vw, 3rem); }
+  .hero-actions { margin-top: 1.5rem; }
+  .about-frame { flex-direction: column; gap: 1.5rem; padding-block: 5rem; }
+  .about-copy { max-width: 44rem; }
+  .about-statement { font-size: clamp(1.375rem, 3.2vw + 0.5rem, 2rem); line-height: 1.4; }
+}
+
+@media (max-width: 39.999rem) {
+  .hero-copy > p:first-child { font-size: 0.625rem; letter-spacing: 0.14em; }
+  .hero-actions { flex-direction: row; align-items: stretch; gap: 0.5rem; }
+  .hero-actions > a { display: flex; min-width: 0; min-height: 44px; flex: 1; align-items: center; justify-content: center; padding: 0.75rem 1rem; font-size: 0.8125rem; }
+}
+
+@media (max-width: 63.999rem) and (max-height: 40rem) {
+  .about-section { height: auto; min-height: 100svh; }
+  .about-scene { position: relative; height: auto; min-height: 100svh; }
+  .about-frame { height: auto; min-height: 100svh; }
+}
+
+/* Four services share one pinned scene; the document keeps its native scroll. */
+.solutions-scroll {
+  position: relative;
+  height: 500svh;
+  scroll-margin-top: 0;
+  overflow: clip;
+}
+
+/* One extra viewport keeps the final service still beneath incoming prices. */
+.solutions-scroll:not(.solutions-static):has(+ .pricing-section) {
+  height: 600svh;
+}
+
+.solutions-scroll:not(.solutions-static) + .pricing-section { margin-top: -100svh; }
+
+.solutions-scene {
   position: sticky;
   top: 0;
-  display: flex;
-  min-height: 100svh;
-  align-items: center;
-  padding-top: 6rem;
-  padding-bottom: 2rem;
+  height: 100svh;
 }
 
+.solutions-frame {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-top: 7.5rem;
+  padding-bottom: 6.5rem;
+}
+
+.solutions-layout {
+  display: grid;
+  min-height: 0;
+  flex: 1;
+  grid-template-columns: 1.12fr 1fr;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 7rem);
+}
+
+.solutions-art {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  max-height: 54rem;
+  mask-image: radial-gradient(ellipse at center, black 48%, transparent 80%);
+  overflow: hidden;
+}
+
+.solutions-art-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.solutions-renaissance {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%, -50%);
+}
+
+.solutions-copy {
+  display: grid;
+  min-width: 0;
+  align-items: center;
+}
+
+.solution-panel {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+
+.solution-description {
+  max-width: 35ch;
+  margin: 1.75rem 0 0;
+  text-wrap: pretty;
+}
+
+.solution-details {
+  display: flex;
+  max-width: 43rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.solution-actions {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  margin-top: 2.75rem;
+}
+
+.solutions-progress {
+  position: absolute;
+  inset-inline: 0;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.solutions-count { color: var(--color-muted); font-family: var(--font-mono); font-size: 0.9rem; letter-spacing: 0.14em; white-space: nowrap; }
+.solutions-count > span { color: var(--color-foreground); }
+
+@media (max-width: 63.999rem) {
+  .solutions-frame { gap: 0; padding-block: 5rem; }
+  .solutions-layout { grid-template-columns: 1fr; grid-template-rows: minmax(96px, min(28svh, 100svh - 36rem)) auto; align-content: center; gap: clamp(1rem, 3svh, 2rem); }
+  .solutions-art { max-height: 28svh; align-self: center; }
+  .solutions-renaissance { width: min(100%, 28svh, 100svh - 36rem); }
+  .solutions-art-layer[data-artwork="3"] .solutions-renaissance { width: min(100%, 49.8svh); }
+  .solution-title { font-size: clamp(1.5rem, 3.2vw + 0.625rem, 2rem); line-height: 1.15; }
+  .solution-description { max-width: 42ch; margin-top: 0.75rem; font-size: 0.875rem; line-height: 1.5; }
+  .solution-details { gap: 0.375rem; margin-top: 1rem; }
+  .solution-details > li { padding: 0.25rem 0.625rem; font-size: 0.75rem; line-height: 1.5; }
+  .solution-actions { margin-top: 1.25rem; }
+  .solution-actions > a { min-height: 44px; padding: 0.625rem 1.25rem; }
+  .solutions-count { font-size: 0.7rem; }
+}
+
+/* Keep the same pinned sequence and wrapped tags on short phones. */
+@media (max-width: 63.999rem) and (max-height: 45rem) {
+  .solutions-frame { padding-bottom: 4.5rem; }
+  .solutions-layout { grid-template-rows: minmax(104px, min(26svh, 100svh - 28rem)) auto; gap: 0.75rem; }
+  .solutions-art { max-height: 26svh; }
+  .solutions-renaissance { width: min(100%, 26svh, 100svh - 28rem); }
+  .solutions-art-layer[data-artwork="3"] .solutions-renaissance { width: min(100%, 46.2svh); }
+  .solutions-copy { min-width: 0; }
+  .solution-title { font-size: 1.375rem; }
+  .solution-description { margin-top: 0.625rem; font-size: 0.8125rem; }
+  .solution-details { gap: 0.25rem; margin-top: 0.625rem; }
+  .solution-details > li { max-width: 100%; padding: 0.125rem 0.5rem; font-size: 0.6875rem; }
+  .solution-actions { margin-top: 0.75rem; }
+}
+
+@media (min-width: 40rem) and (max-width: 63.999rem) and (max-height: 45rem) {
+  .solutions-layout { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); grid-template-rows: 1fr; gap: 2rem; }
+  .solutions-art { max-height: 100%; }
+  .solutions-renaissance { width: min(100%, 52svh); }
+  .solutions-art-layer[data-artwork="3"] .solutions-renaissance { width: 100%; }
+}
+
+@media (min-width: 64rem) and (max-height: 48rem) {
+  .solutions-frame { padding-top: 5rem; padding-bottom: 5rem; }
+  .solution-description { margin-top: 1.25rem; }
+  .solution-actions { margin-top: 1.75rem; }
+}
+
+.solutions-static { height: auto; }
+.solutions-static .solutions-scene { position: relative; height: auto; }
+.solutions-static .solutions-layout { grid-template-rows: auto auto; align-items: start; }
+.solutions-static .solutions-art { position: sticky; top: 8rem; height: 60svh; }
+.solutions-static .solutions-copy { display: block; }
+.solutions-static .solution-panel { padding-block: 3rem; opacity: 1 !important; filter: none !important; transform: none !important; }
+.solutions-static .solution-panel + .solution-panel { border-top: 1px solid var(--color-border); }
+.solutions-static .solutions-progress { display: none; }
+
+@media (max-width: 63.999rem) {
+  .solutions-static .solutions-layout { display: block; }
+  .solutions-static .solutions-art { position: relative; inset: auto; height: 220px; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .solutions-scroll { height: auto; }
+  .solutions-scene { position: relative; height: auto; }
+  .solution-panel { opacity: 1 !important; filter: none !important; transform: none !important; }
+}
+
+.faq-layout { display: grid; align-items: start; gap: 2.5rem; }
+.faq-book { position: relative; width: min(100%, 32rem); aspect-ratio: 4 / 3; margin-top: 1.5rem; }
+
 @media (min-width: 64rem) {
-  .process-scene {
-    padding-top: 7rem;
-    padding-bottom: 4rem;
-  }
+  .faq-layout { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(3rem, 7vw, 8rem); }
+  .faq-intro { position: sticky; top: 8rem; }
+  .faq-book { width: min(100%, 48rem, max(16rem, calc((100svh - 25rem) * 1.333333))); margin-top: 2rem; }
+}
+
+.pricing-section {
+  position: relative;
+  isolation: isolate;
+  z-index: 10;
+  overflow: clip;
+  background: var(--color-background);
+}
+
+.pricing-scene { position: relative; }
+.pricing-frame { display: flex; min-height: 100%; flex-direction: column; justify-content: center; padding-block: 5rem; }
+.pricing-section[data-pinned="true"] { height: 140svh; }
+.pricing-section[data-pinned="true"] .pricing-scene { position: sticky; top: 0; height: 100svh; }
+
+@media (max-width: 63.999rem) {
+  .pricing-frame { padding-top: 6rem; }
+}
+
+/* The process keeps the page's photographic/ASCII language, without a UI frame. */
+.process-scroll { height: 330svh; }
+.process-scene { position: sticky; top: 0; display: flex; height: 100svh; align-items: stretch; padding-block: 7.5rem 6rem; overflow: clip; isolation: isolate; }
+.process-frame { height: 100%; }
+.process-heading-wrap { position: relative; z-index: 2; grid-column: 1 / 3; grid-row: 1; }
+.process-heading { max-width: 24ch; }
+.process-layout { --process-photo-height: min(44svh, 32rem); display: grid; height: 100%; grid-template-columns: minmax(10rem, 1fr) minmax(0, 1.8fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); align-items: start; column-gap: clamp(2rem, 4vw, 5rem); row-gap: 2rem; }
+.process-rail { position: relative; z-index: 2; grid-column: 1; grid-row: 2; display: grid; height: 100%; min-height: 0; grid-template-rows: minmax(0, 1fr) auto; justify-items: start; gap: 2rem; }
+.process-art { position: relative; grid-column: 2; grid-row: 2; align-self: center; height: var(--process-photo-height); width: min(100%, 33rem); min-width: 0; margin: 0; justify-self: center; }
+.process-photo-layer, .ascii-photo { position: absolute; inset: 0; }
+.ascii-photo { overflow: hidden; border-radius: 1.5rem; }
+.ascii-photo img, .ascii-photo canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.ascii-photo img { object-fit: cover; filter: grayscale(1) contrast(1.15) brightness(0.85); mask-image: linear-gradient(105deg, black 25%, rgb(0 0 0 / 80%) 42%, transparent 78%); }
+.ascii-photo canvas { color: var(--color-foreground); mask-image: linear-gradient(105deg, transparent 25%, black 66%); }
+.process-stages { display: flex; flex-direction: column; align-items: start; align-self: end; gap: 0; }
+.process-stages li { max-width: 100%; }
+.process-stages button { display: flex; max-width: 100%; min-height: 36px; align-items: center; gap: 0.85rem; border-radius: 999px; padding: 0.35rem 1rem; color: var(--color-muted); text-align: left; cursor: pointer; transition: color 180ms, background-color 180ms; }
+.process-stages button:hover { color: var(--color-foreground); }
+.process-stages button[aria-current="step"] { background: var(--color-surface-2); color: var(--color-foreground); }
+.process-stages button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 5px; }
+.process-stage-marker { width: 0.5rem; height: 0.5rem; flex: none; border-radius: 2px; background: var(--color-border-strong); }
+.process-stages button[aria-current="step"] .process-stage-marker { background: var(--color-accent); }
+.process-stage-label { font-size: 1rem; }
+.process-step-index { display: flex; align-items: center; gap: 0.75rem; color: var(--color-muted); font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.5; letter-spacing: 0.14em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.process-step-current { color: var(--color-foreground); }
+.process-caption { position: relative; z-index: 2; grid-column: 3; grid-row: 1 / 3; min-width: 0; }
+.process-stage-description { max-width: 35ch; margin: 0.5rem 0 0; text-wrap: pretty; }
+.process-static { height: auto; }
+.process-static .process-scene { position: relative; height: auto; padding-block: 6rem; }
+.process-static .process-frame, .process-static .process-layout { height: auto; }
+.process-static .process-layout { grid-template-rows: auto auto; }
+.process-static .process-rail { height: auto; min-height: var(--process-photo-height); }
+
+/* A brief native pin; both rows loop independently of the visitor's scrolling. */
+.projects-scroll { position: relative; height: 145svh; }
+.projects-scene { position: sticky; top: 0; display: flex; height: 100svh; flex-direction: column; justify-content: center; gap: clamp(1.5rem, 4svh, 3.5rem); padding-block: 5.5rem 4.5rem; overflow: clip; }
+.projects-frame { display: flex; width: 100%; flex-direction: column; gap: inherit; }
+.projects-rows { display: grid; width: 100%; gap: clamp(0.75rem, 1.6vw, 1.75rem); }
+.project-row-viewport { min-width: 0; overflow: clip; }
+.project-row { display: flex; width: max-content; animation: project-drift 55s linear infinite; will-change: transform; }
+.project-row-reverse { animation-direction: reverse; }
+.project-row-group { display: flex; flex: none; gap: clamp(0.75rem, 1.6vw, 1.75rem); padding-right: clamp(0.75rem, 1.6vw, 1.75rem); }
+.projects-scroll[data-running="false"] .project-row { animation-play-state: paused; }
+@keyframes project-drift { to { transform: translateX(-50%); } }
+.project-shot { width: clamp(20rem, 36vw, 48rem); height: clamp(10rem, 28svh, 34rem); flex: none; margin: 0; overflow: hidden; border: 1px solid var(--color-border); border-radius: 0.75rem; background: var(--color-surface); }
+.project-shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.projects-static { height: auto; }
+.projects-static .projects-scene { position: relative; height: auto; padding-block: 5rem; }
+.projects-static .projects-rows { padding-inline: var(--site-gutter); }
+.projects-static .project-row { display: block; width: 100%; animation: none; transform: none; will-change: auto; }
+.projects-static .project-row-group { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); padding: 0; }
+.projects-static .project-shot { width: 100%; height: auto; aspect-ratio: 8 / 5; }
+.projects-static .project-row-duplicate { display: none; }
+
+@media (max-width: 63.999rem) {
+  .process-scene { padding-block: 5.5rem 4.5rem; }
+  .process-layout { --process-photo-height: min(30svh, 20rem); grid-template-columns: minmax(7.5rem, 0.6fr) minmax(0, 1.4fr); grid-template-rows: auto minmax(0, 1fr) auto; column-gap: 1.5rem; row-gap: 1rem; }
+  .process-heading-wrap { grid-column: 1 / -1; }
+  .process-rail { grid-column: 1; grid-row: 2 / 4; min-height: 0; gap: 1rem; }
+  .process-stages button { min-height: 44px; padding: 0.5rem 0.75rem; gap: 0.6rem; }
+  .process-art { grid-column: 2; grid-row: 2; }
+  .process-caption { grid-column: 2; grid-row: 3; }
+  .process-stage-label { font-size: 0.9rem; }
+  .project-shot { width: 70vw; height: 27svh; }
+}
+
+@media (max-width: 39.999rem) {
+  .process-layout { --process-photo-height: 27svh; grid-template-columns: 44px minmax(0, 1fr); column-gap: 1rem; }
+  .process-stages button { width: 44px; justify-content: center; padding-inline: 0; }
+  .process-stage-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .process-step-index { gap: 0.25rem; font-size: 0.75rem; letter-spacing: 0.05em; }
+  .projects-static .project-row-group { grid-template-columns: 1fr; }
+}
+
+@media (max-height: 740px) and (max-width: 63.999rem) {
+  .process-scene { padding-block: 4rem 3.5rem; }
+  .process-layout { --process-photo-height: 25svh; row-gap: 0.75rem; }
+}
+
+@media (max-height: 540px) and (min-width: 40rem) {
+  .projects-scene { padding-block: 4rem 2.5rem; gap: 0.75rem; }
+  .projects-heading h2 { font-size: 1.75rem; }
+  .process-heading { font-size: 1.75rem; }
+  .process-layout { --process-photo-height: 45svh; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -220,6 +516,7 @@ h4 {
 
   .process-scene {
     position: relative;
+    height: auto;
     min-height: 0;
     padding-block: 6rem;
   }

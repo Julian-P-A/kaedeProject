@@ -25,7 +25,7 @@ export function Footer({ children }: { children?: ReactNode }) {
         {children && (
           <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-20">
             {children}
-            <nav aria-label={lang === 'es' ? 'Navegación del pie' : 'Footer navigation'} className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm lg:flex-col lg:items-start lg:justify-start lg:gap-4">
+            <nav aria-label={lang === 'es' ? 'Navegación del pie' : 'Footer navigation'} className="hidden flex-wrap justify-center gap-x-6 gap-y-3 text-sm lg:flex lg:flex-col lg:items-start lg:justify-start lg:gap-4">
               {t.nav.links.map((link) => (
                 <a key={link.href} href={`/${lang}${link.href}`} className="text-foreground/80 transition hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent">
                   {link.label}
@@ -67,7 +67,6 @@ export function Footer({ children }: { children?: ReactNode }) {
 
       {/* A bounded background layer inside the same footer composition. */}
       <AsciiFire
-        cellSize={8}
         palette={FIRE_PALETTE}
         className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 block h-[180px] w-full opacity-60 [mask-image:linear-gradient(to_top,black_30%,transparent)]"
       />

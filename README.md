@@ -87,7 +87,8 @@ Se implementaron diferentes componentes para mejorar la experiencia visual:
 - Cursor personalizado.
 - Contadores animados.
 - Transiciones entre componentes.
-- Diagramas interactivos de procesos.
+- Etapas del proyecto con fotografías y una capa ASCII.
+- Galería de proyectos con dos filas en movimiento continuo.
 
 Las animaciones contemplan las preferencias de movimiento reducido del usuario.
 

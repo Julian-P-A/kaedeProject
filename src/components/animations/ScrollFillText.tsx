@@ -22,18 +22,34 @@ function FillWord({ word, index, total, progress, reduce }: {
 }
 
 /** Fill each word from left to right as the heading moves through the viewport. */
-export function ScrollFillText({ text, className }: { text: string; className?: string }) {
+export function ScrollFillText({ text, highlights = [], className }: {
+  text: string
+  highlights?: string[]
+  className?: string
+}) {
   const ref = useRef<HTMLHeadingElement>(null)
   const reduce = useReducedMotion()
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.85', 'end 0.5'] })
   const words = text.split(' ')
+  const phrases = highlights.map((phrase) => phrase.split(' '))
+  const runs: { index: number; text: string; highlighted: boolean }[] = []
+  for (let index = 0; index < words.length;) {
+    const phrase = phrases.find((phraseWords) => phraseWords.every((word, offset) => words[index + offset] === word))
+    const length = phrase?.length ?? 1
+    runs.push({ index, text: words.slice(index, index + length).join(' '), highlighted: !!phrase })
+    index += length
+  }
 
   return (
     <h2 ref={ref} className={`relative ${className ?? ''}`}>
-      {words.map((word, index) => (
-        <Fragment key={`${index}-${word}`}>
-          <FillWord word={word} index={index} total={words.length} progress={scrollYProgress} reduce={!!reduce} />
-          {index < words.length - 1 ? ' ' : ''}
+      {runs.map((run, index) => (
+        <Fragment key={`${run.index}-${run.text}`}>
+          {run.highlighted ? (
+            <mark className="scroll-fill-highlight">{run.text}</mark>
+          ) : (
+            <FillWord word={run.text} index={run.index} total={words.length} progress={scrollYProgress} reduce={!!reduce} />
+          )}
+          {index < runs.length - 1 ? ' ' : ''}
         </Fragment>
       ))}
     </h2>

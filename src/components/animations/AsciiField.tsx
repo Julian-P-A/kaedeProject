@@ -1,5 +1,6 @@
 import { useReducedMotion } from '#/hooks/useReducedMotion'
 import { useEffect, useRef } from 'react'
+import { ASCII_CELL_SIZE, ASCII_FONT_FAMILY, ASCII_MAX_DPR, ASCII_RAMP } from './asciiStyle'
 
 /**
  * Decorative field of ASCII characters that slowly shift: a soft density wave
@@ -9,9 +10,9 @@ import { useEffect, useRef } from 'react'
  */
 export function AsciiField({
   className,
-  cellSize = 11,
+  cellSize = ASCII_CELL_SIZE,
   fps = 10,
-  ramp = ' .·:-=+*#',
+  ramp = ASCII_RAMP,
   seed = 0,
 }: {
   className?: string
@@ -40,12 +41,12 @@ export function AsciiField({
     let visible = false
 
     const layout = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const dpr = Math.min(window.devicePixelRatio || 1, ASCII_MAX_DPR)
       const { clientWidth: w, clientHeight: h } = canvas
       canvas.width = Math.round(w * dpr)
       canvas.height = Math.round(h * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      ctx.font = `${cellSize}px ui-monospace, SFMono-Regular, Menlo, monospace`
+      ctx.font = `${cellSize}px ${ASCII_FONT_FAMILY}`
       ctx.textBaseline = 'top'
       charW = ctx.measureText('M').width
       cols = Math.ceil(w / charW)

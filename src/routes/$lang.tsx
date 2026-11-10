@@ -6,7 +6,6 @@ import { Header } from '#/components/Header'
 import { Hero } from '#/components/Hero'
 import { Solutions } from '#/components/Solutions'
 import { WebDevelopment } from '#/components/WebDevelopment'
-import { DigitalEcosystem } from '#/components/DigitalEcosystem'
 import { Process } from '#/components/Process'
 import { Projects } from '#/components/Projects'
 import { About } from '#/components/About'
@@ -36,7 +35,6 @@ function Home() {
             <About />
             <Solutions />
             <WebDevelopment />
-            <DigitalEcosystem />
             <Process />
             <Projects />
             <Faq />

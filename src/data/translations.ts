@@ -13,6 +13,8 @@ interface Service {
   title: string
   headline: string
   items: string[]
+  cta: string
+  whatsappUrl: string
 }
 
 interface ServiceCardCopy {
@@ -53,24 +55,11 @@ interface DiagnosticResult {
   description: string
 }
 
-export type ProjectId = 'fuego' | 'celestina' | 'leadgen'
-
-interface Project {
-  id: ProjectId
-  name: string
-  category: string
+export interface ProcessStage {
+  id: 'brief' | 'scope' | 'design' | 'build' | 'launch'
+  title: string
   description: string
 }
-
-type ProcessStageCopy = { title: string; description: string; deliverable: string }
-export type ProcessStage = ProcessStageCopy & (
-  | { id: 'brief'; nodes: [string, string, string, string, string] }
-  | { id: 'scope'; nodes: [string, string, string] }
-  | { id: 'design'; nodes: [string, string] }
-  | { id: 'build'; nodes: [string, string, string] }
-  | { id: 'connect'; nodes: [string, string, string, string] }
-  | { id: 'launch'; nodes: [string, string, string] }
-)
 
 export interface Translations {
   seo: { title: string; description: string }
@@ -85,22 +74,7 @@ export interface Translations {
     tagline: string
     whatsappUrl: string
   }
-  dashboard: {
-    barTitle: string
-    status: string
-    action: string
-    flow: string[]
-    flowLabel: string
-    cards: {
-      leads: { label: string; value: string }
-      automation: { label: string; value: string }
-      crm: { label: string; value: string }
-      ai: { label: string; value: string }
-      website: { label: string; value: string }
-    }
-    disclaimer: string
-  }
-  solutionsIntro: { tag: string; title: string }
+  solutionsIntro: { tag: string; title: string; navigationLabel: string }
   services: Service[]
   serviceCards: ServiceCardCopy[]
   webDev: {
@@ -116,9 +90,8 @@ export interface Translations {
     stages: ProcessStage[]
   }
   capabilities: { tag: string; items: string[] }
-  projectsSection: { tag: string; title: string; items: Project[] }
-  about: { tag: string; statement: string }
-  ecosystem: { tag: string; title: string }
+  projectsSection: { tag: string; title: string }
+  about: { tag: string; statement: string; highlights: string[] }
   finalCta: {
     tag: string
     title: string
@@ -182,30 +155,18 @@ export const translations: Record<Language, Translations> = {
       whatsappUrl:
         whatsappUrl('Hello. I am ready to start a project with you. What are the next steps?'),
     },
-    dashboard: {
-      barTitle: 'Kaede Operations',
-      status: 'All systems live',
-      action: 'New workflow',
-      flow: ['Website', 'Lead captured', 'CRM', 'AI qualification', 'Automation', 'Sales team'],
-      flowLabel: 'Live workflow',
-      cards: {
-        leads: { label: 'New Leads', value: '+247' },
-        automation: { label: 'Automated', value: '93%' },
-        crm: { label: 'CRM', value: 'Pipeline Active' },
-        ai: { label: 'AI Agent', value: 'Running' },
-        website: { label: 'Online', value: '99.9%' },
-      },
-      disclaimer: 'Illustrative interface — conceptual, not a live client dashboard.',
-    },
     solutionsIntro: {
       tag: '( 1 ) What we do',
       title: 'IT and AI for *growth.*',
+      navigationLabel: 'Explore our services',
     },
     services: [
       {
         number: '01',
         title: 'Web Development',
         headline: 'Websites built to sell and to grow with your business.',
+        cta: 'Build my website',
+        whatsappUrl: whatsappUrl('Hello. I want to build a website for my business. Can we discuss my project?'),
         items: [
           'Landing Pages',
           'Corporate Websites',
@@ -219,6 +180,8 @@ export const translations: Record<Language, Translations> = {
         number: '02',
         title: 'Artificial Intelligence',
         headline: 'AI consulting and development around real workflows, not hype.',
+        cta: 'Bring AI to my business',
+        whatsappUrl: whatsappUrl('Hello. I want to explore AI consulting and development for my business.'),
         items: [
           'AI consulting',
           'AI assistants',
@@ -233,6 +196,8 @@ export const translations: Record<Language, Translations> = {
         number: '03',
         title: 'Automation',
         headline: 'Connect your tools and automate repetitive processes.',
+        cta: 'Automate my workflows',
+        whatsappUrl: whatsappUrl('Hello. I want to automate repetitive processes and connect my business tools.'),
         items: [
           'Workflow automation',
           'Lead routing',
@@ -247,6 +212,8 @@ export const translations: Record<Language, Translations> = {
         number: '04',
         title: 'CRM & Integrations',
         headline: 'Build connected systems that turn scattered information into structured operations.',
+        cta: 'Connect my CRM',
+        whatsappUrl: whatsappUrl('Hello. I need help implementing or connecting a CRM with my business tools.'),
         items: [
           'CRM implementation',
           'CRM customization',
@@ -346,38 +313,22 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'brief', title: 'Discover',
           description: 'We listen, map your business and find where technology can make a difference.',
-          deliverable: 'A shared understanding of your business, goals and opportunities.',
-          nodes: ['Business', 'Goals', 'Tools', 'Team', 'Your brief'],
         },
         {
           id: 'scope', title: 'Define',
           description: 'We turn what we learn into clear priorities, scope and a plan for your project.',
-          deliverable: 'An agreed scope and a clear roadmap.',
-          nodes: ['Goals', 'Project scope', 'Roadmap'],
         },
         {
           id: 'design', title: 'Design',
           description: 'We shape the experience, structure and visual direction before development.',
-          deliverable: 'An experience designed around your users and your brand.',
-          nodes: ['Explore', 'Structure, experience and visual design'],
         },
         {
           id: 'build', title: 'Build',
           description: 'We bring the design to life and test how every part works together.',
-          deliverable: 'A working, tested solution built for your business.',
-          nodes: ['Development', 'Testing', 'Ready to connect'],
-        },
-        {
-          id: 'connect', title: 'Connect',
-          description: 'We connect your website, CRM, AI and automations into one workflow.',
-          deliverable: 'Your tools connected, with information flowing between them.',
-          nodes: ['Web', 'CRM', 'AI', 'Automation'],
         },
         {
           id: 'launch', title: 'Launch',
           description: 'We put the solution live, check the connections and prepare your team to use it.',
-          deliverable: 'Your project live, connected and ready for the next stage.',
-          nodes: ['Deployment', 'Connected systems', 'Monitoring'],
         },
       ],
     },
@@ -399,37 +350,12 @@ export const translations: Record<Language, Translations> = {
     projectsSection: {
       tag: '( 6 ) Selected projects',
       title: 'Real *projects.*',
-      items: [
-        {
-          id: 'fuego',
-          name: 'Fuego E-sports',
-          category: 'Corporate Website',
-          description:
-            'Website for an e-sports organization showcasing its identity, roster, tournaments and achievements through a dynamic and immersive experience.',
-        },
-        {
-          id: 'celestina',
-          name: 'Celestina Cosmetics',
-          category: 'E-commerce',
-          description: 'Online store designed to improve product discovery, navigation and the buying experience.',
-        },
-        {
-          id: 'leadgen',
-          name: 'Lead Generation',
-          category: 'Landing Page',
-          description:
-            'High-conversion landing experience focused on campaigns, lead capture and measurable business outcomes.',
-        },
-      ],
     },
     about: {
       tag: '( 7 ) About',
       statement:
         'We are the IT and AI partner for businesses that want to grow without complicating their operation: we advise you, build what you need and connect it so your business works as one system.',
-    },
-    ecosystem: {
-      tag: '( 3 ) Connected Ecosystem',
-      title: 'Your business, *connected.*',
+      highlights: ['IT and AI partner', 'one system.'],
     },
     finalCta: {
       tag: '( 9 ) Let’s talk',
@@ -478,9 +404,49 @@ export const translations: Record<Language, Translations> = {
             'Yes. We implement and customize CRM systems, build lead pipelines, connect them through API integrations to your website and other platforms, and create dashboards so your team sees what matters.',
         },
         {
+          question: 'How long does a project take?',
+          answer:
+            'It depends on the scope, number of pages, integrations and available content. Before we start, we define the stages, deliverables and estimated timeline in the proposal. Changes to the scope may also change the schedule.',
+        },
+        {
+          question: 'Do I need to have my design and content ready?',
+          answer:
+            'We can start with your existing brand and materials, or identify what still needs to be created. During discovery, we agree on the copy, images, product information and other assets the project needs, and who will provide them.',
+        },
+        {
+          question: 'Can you improve my current website?',
+          answer:
+            'We first review its structure, technology and the results you want to improve. That helps us decide whether to optimize the existing site, connect new features or build a new version. A full rebuild is not always necessary.',
+        },
+        {
+          question: 'Can I hire you for just one service?',
+          answer:
+            'Yes. We can focus on a website, a specific automation, an AI solution or an integration. We define a scope that addresses that need and fits the tools you already use, so you can start with a clear priority.',
+        },
+        {
+          question: 'Can you connect the tools I already use?',
+          answer:
+            'We review how your current tools exchange information and which integrations they support. Access permissions, available APIs and platform limits help determine what can be connected and what the implementation involves.',
+        },
+        {
+          question: 'How do I know whether I need AI or automation?',
+          answer:
+            'If a task follows clear rules and repeats the same steps, automation may be enough. AI can help with tasks that involve interpreting text or generating responses. We review the process first and may combine both when that makes sense.',
+        },
+        {
+          question: 'Are there recurring costs beyond development?',
+          answer:
+            'Hosting, domains, software subscriptions and API usage may have separate costs. The proposal clarifies what the implementation covers and which costs depend on external providers or usage, so you can plan beyond the initial build.',
+        },
+        {
+          question: 'Can the project grow in stages?',
+          answer:
+            'Yes. We can define an initial scope around the most important need and plan later additions, such as a store, CRM connection or automation. Each new phase is scoped and quoted before implementation.',
+        },
+        {
           question: 'How do I start a project with Kaede Project?',
           answer:
-            'Write to us on WhatsApp or take the quick diagnostic on this page. We work in stages (Discover, Define, Design, Build, Connect and Launch) and, before we start, send you a quote with the scope and timeline.',
+            'Write to us on WhatsApp or take the quick diagnostic on this page. We work in stages (Discover, Define, Design, Build and Launch) and, before we start, send you a quote with the scope and timeline.',
         },
       ],
     },
@@ -635,30 +601,18 @@ export const translations: Record<Language, Translations> = {
       whatsappUrl:
         whatsappUrl('Hola. Estoy listo para iniciar un proyecto con ustedes. ¿Cuáles son los siguientes pasos?'),
     },
-    dashboard: {
-      barTitle: 'Kaede Operations',
-      status: 'Todos los sistemas activos',
-      action: 'Nuevo flujo',
-      flow: ['Sitio web', 'Lead capturado', 'CRM', 'Calificación IA', 'Automatización', 'Equipo de ventas'],
-      flowLabel: 'Flujo en vivo',
-      cards: {
-        leads: { label: 'Nuevos Leads', value: '+247' },
-        automation: { label: 'Automatizado', value: '93%' },
-        crm: { label: 'CRM', value: 'Pipeline Activo' },
-        ai: { label: 'Agente IA', value: 'Activo' },
-        website: { label: 'En línea', value: '99.9%' },
-      },
-      disclaimer: 'Interfaz ilustrativa — conceptual, no es un dashboard real de cliente.',
-    },
     solutionsIntro: {
       tag: '( 1 ) Qué hacemos',
       title: 'TI e IA para *crecer.*',
+      navigationLabel: 'Explora nuestros servicios',
     },
     services: [
       {
         number: '01',
-        title: 'Desarrollo Web',
+        title: 'Desarrollo web',
         headline: 'Sitios web hechos para vender y crecer con tu negocio.',
+        cta: 'Construir mi sitio web',
+        whatsappUrl: whatsappUrl('Hola. Quiero desarrollar un sitio web para mi negocio. ¿Podemos hablar de mi proyecto?'),
         items: [
           'Landing Pages',
           'Sitios Corporativos',
@@ -670,8 +624,10 @@ export const translations: Record<Language, Translations> = {
       },
       {
         number: '02',
-        title: 'Inteligencia Artificial',
+        title: 'Inteligencia artificial',
         headline: 'Consultoría y desarrollo de IA alrededor de procesos reales, no de tendencias.',
+        cta: 'Integrar IA en mi negocio',
+        whatsappUrl: whatsappUrl('Hola. Quiero conocer sus servicios de consultoría y desarrollo de IA para mi negocio.'),
         items: [
           'Consultoría de IA',
           'Asistentes de IA',
@@ -686,6 +642,8 @@ export const translations: Record<Language, Translations> = {
         number: '03',
         title: 'Automatización',
         headline: 'Conecta tus herramientas y automatiza procesos repetitivos.',
+        cta: 'Automatizar mi operación',
+        whatsappUrl: whatsappUrl('Hola. Quiero automatizar procesos repetitivos y conectar las herramientas de mi negocio.'),
         items: [
           'Automatización de flujos',
           'Enrutamiento de leads',
@@ -700,6 +658,8 @@ export const translations: Record<Language, Translations> = {
         number: '04',
         title: 'CRM e Integraciones',
         headline: 'Construimos sistemas conectados que convierten información dispersa en operaciones estructuradas.',
+        cta: 'Conectar mi CRM',
+        whatsappUrl: whatsappUrl('Hola. Necesito ayuda para implementar o conectar un CRM con las herramientas de mi negocio.'),
         items: [
           'Implementación de CRM',
           'Personalización de CRM',
@@ -800,38 +760,22 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'brief', title: 'Descubrir',
           description: 'Escuchamos, entendemos tu negocio y encontramos dónde puede aportar la tecnología.',
-          deliverable: 'Una visión compartida del negocio, sus objetivos y oportunidades.',
-          nodes: ['Negocio', 'Objetivos', 'Herramientas', 'Equipo', 'Tu proyecto'],
         },
         {
           id: 'scope', title: 'Definir',
           description: 'Convertimos lo aprendido en prioridades, un alcance claro y un plan para tu proyecto.',
-          deliverable: 'Un alcance acordado y una hoja de ruta clara.',
-          nodes: ['Objetivos', 'Alcance', 'Plan'],
         },
         {
           id: 'design', title: 'Diseñar',
           description: 'Damos forma a la experiencia, la estructura y la dirección visual antes de desarrollar.',
-          deliverable: 'Una experiencia pensada para tus usuarios y tu marca.',
-          nodes: ['Explorar', 'Estructura, experiencia y diseño visual'],
         },
         {
           id: 'build', title: 'Desarrollar',
           description: 'Hacemos realidad el diseño y probamos cómo funciona cada parte del proyecto.',
-          deliverable: 'Una solución funcional y probada para tu negocio.',
-          nodes: ['Desarrollo', 'Pruebas', 'Listo para conectar'],
-        },
-        {
-          id: 'connect', title: 'Conectar',
-          description: 'Conectamos tu web, CRM, IA y automatizaciones en un mismo flujo de trabajo.',
-          deliverable: 'Tus herramientas conectadas y la información fluyendo entre ellas.',
-          nodes: ['Web', 'CRM', 'IA', 'Automatización'],
         },
         {
           id: 'launch', title: 'Lanzar',
           description: 'Publicamos la solución, comprobamos las conexiones y preparamos a tu equipo para usarla.',
-          deliverable: 'Tu proyecto publicado, conectado y listo para su siguiente etapa.',
-          nodes: ['Publicación', 'Sistemas conectados', 'Monitoreo'],
         },
       ],
     },
@@ -853,37 +797,12 @@ export const translations: Record<Language, Translations> = {
     projectsSection: {
       tag: '( 6 ) Proyectos seleccionados',
       title: 'Proyectos *reales.*',
-      items: [
-        {
-          id: 'fuego',
-          name: 'Fuego E-sports',
-          category: 'Sitio Corporativo',
-          description:
-            'Sitio web para una organización de e-sports que muestra su identidad, roster, torneos y logros a través de una experiencia dinámica e inmersiva.',
-        },
-        {
-          id: 'celestina',
-          name: 'Celestina Cosmetics',
-          category: 'E-commerce',
-          description: 'Tienda online diseñada para mejorar el descubrimiento de productos, la navegación y la experiencia de compra.',
-        },
-        {
-          id: 'leadgen',
-          name: 'Lead Generation',
-          category: 'Landing Page',
-          description:
-            'Experiencia de landing de alta conversión enfocada en campañas, captura de leads y resultados de negocio medibles.',
-        },
-      ],
     },
     about: {
       tag: '( 7 ) Nosotros',
       statement:
         'Somos el socio de TI e IA para empresas que quieren crecer sin complicar su operación: te asesoramos, construimos lo que necesitas y lo conectamos para que tu negocio funcione como un solo sistema.',
-    },
-    ecosystem: {
-      tag: '( 3 ) Ecosistema Conectado',
-      title: 'Todo tu negocio, *conectado.*',
+      highlights: ['socio de TI e IA', 'un solo sistema.'],
     },
     finalCta: {
       tag: '( 9 ) Hablemos',
@@ -932,9 +851,49 @@ export const translations: Record<Language, Translations> = {
             'Sí. Implementamos y personalizamos sistemas CRM, construimos pipelines de leads, los conectamos por API con tu sitio web y otras plataformas, y creamos dashboards para que tu equipo vea lo que importa.',
         },
         {
+          question: '¿Cuánto tiempo toma un proyecto?',
+          answer:
+            'Depende del alcance, la cantidad de páginas, las integraciones y el contenido disponible. Antes de empezar, definimos las etapas, los entregables y un tiempo estimado en la propuesta. Si cambia el alcance, también puede cambiar el cronograma.',
+        },
+        {
+          question: '¿Necesito tener listo el diseño y los contenidos?',
+          answer:
+            'Podemos partir de tu marca y los materiales que ya tienes, o identificar lo que hace falta crear. En la etapa de descubrimiento acordamos qué textos, imágenes, información de productos y otros recursos necesita el proyecto, y quién los aporta.',
+        },
+        {
+          question: '¿Pueden mejorar mi página web actual?',
+          answer:
+            'Primero revisamos su estructura, tecnología y los resultados que quieres mejorar. Con eso evaluamos si conviene optimizar el sitio existente, conectar nuevas funciones o desarrollar una nueva versión. No siempre es necesario empezar de cero.',
+        },
+        {
+          question: '¿Puedo contratar solo uno de sus servicios?',
+          answer:
+            'Sí. Podemos enfocarnos en una página web, una automatización puntual, una solución de IA o una integración. Definimos un alcance que resuelva esa necesidad y encaje con las herramientas que ya usas, para que empieces por una prioridad clara.',
+        },
+        {
+          question: '¿Pueden conectar las herramientas que ya utilizo?',
+          answer:
+            'Revisamos cómo intercambian información tus herramientas y qué integraciones permiten. Los permisos de acceso, las API disponibles y las limitaciones de cada plataforma nos ayudan a definir qué se puede conectar y qué requiere la implementación.',
+        },
+        {
+          question: '¿Cómo sé si necesito IA o una automatización?',
+          answer:
+            'Si una tarea sigue reglas claras y repite los mismos pasos, una automatización puede ser suficiente. La IA puede ayudar cuando hace falta interpretar texto o generar respuestas. Revisamos primero el proceso y, cuando tiene sentido, combinamos ambas.',
+        },
+        {
+          question: '¿Hay costos recurrentes además del desarrollo?',
+          answer:
+            'El hosting, el dominio, las suscripciones de software y el consumo de API pueden tener costos propios. En la propuesta aclaramos qué cubre la implementación y qué costos dependen de proveedores externos o del uso, para que puedas planear más allá del desarrollo inicial.',
+        },
+        {
+          question: '¿El proyecto puede crecer por etapas?',
+          answer:
+            'Sí. Podemos definir un alcance inicial alrededor de la necesidad más importante y planear después nuevas funciones, como una tienda, una conexión con tu CRM o una automatización. Cada nueva etapa se define y cotiza antes de implementarla.',
+        },
+        {
           question: '¿Cómo inicio un proyecto con Kaede Project?',
           answer:
-            'Escríbenos por WhatsApp o haz el diagnóstico rápido de esta página. Trabajamos por etapas (descubrir, definir, diseñar, desarrollar, conectar y lanzar) y, antes de empezar, te enviamos una cotización con el alcance y los tiempos.',
+            'Escríbenos por WhatsApp o haz el diagnóstico rápido de esta página. Trabajamos por etapas (descubrir, definir, diseñar, desarrollar y lanzar) y, antes de empezar, te enviamos una cotización con el alcance y los tiempos.',
         },
       ],
     },

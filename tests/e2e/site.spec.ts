@@ -145,7 +145,8 @@ test('dialog contains focus, blocks the background, preserves the cursor and res
   await expect(dialog).toHaveCount(0)
   await expect(secondTrigger).toBeFocused()
   await trigger.click()
-  await page.mouse.click(10, 10)
+  await expect(dialog).toBeVisible()
+  await dialog.locator('..').click({ position: { x: 10, y: 10 } })
   await expect(dialog).toHaveCount(0)
 })
 
@@ -297,7 +298,7 @@ test('second section sharpens while shrinking in, then blurs and grows as it lea
     const geometry = await about.evaluate((element) => ({ top: element.getBoundingClientRect().top + scrollY, height: element.getBoundingClientRect().height }))
     const panel = about.locator(':scope > div')
     expect((await panel.boundingBox())!.height).toBeCloseTo(900, 0)
-    const copy = about.locator('h2').locator('..')
+    const copy = about.locator('.about-frame')
     const state = () => copy.evaluate((element) => {
       const css = getComputedStyle(element)
       const transform = new DOMMatrixReadOnly(css.transform)
@@ -306,6 +307,7 @@ test('second section sharpens while shrinking in, then blurs and grows as it lea
 
     await page.evaluate((top) => scrollTo({ top, behavior: 'instant' }), geometry.top - 585)
     await expect.poll(async () => (await state()).blur).toBeGreaterThan(2)
+    await expect.poll(async () => (await state()).scale).toBeGreaterThan(1.08)
     const entrance = await state()
     expect(entrance.scale).toBeGreaterThan(1.08)
     expect(entrance.y).toBeGreaterThan(0)
@@ -387,28 +389,30 @@ test('explicit URLs override the browser language and root negotiates priority',
 test('scroll advances each process stage with normal motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await navigate(page, '/es')
-  for (let index = 0; index < 6; index++) {
-    await page.evaluate((stage) => {
+  const count = await page.locator('#process ol button').count()
+  for (let index = 0; index < count; index++) {
+    await page.evaluate(({ stage, count }) => {
       const bounds = document.querySelector('#process')!.getBoundingClientRect()
       window.scrollTo({
-        top: window.scrollY + bounds.top + (bounds.height - window.innerHeight) * ((stage + 0.3) / 6),
+        top: window.scrollY + bounds.top + (bounds.height - window.innerHeight) * ((stage + 0.3) / count),
         behavior: 'instant',
       })
-    }, index)
+    }, { stage: index, count })
     await expect(page.locator('#process ol button').nth(index)).toHaveAttribute('aria-current', 'step')
   }
 })
 
-test('all process IDs select the matching diagram and structured prices match visible labels', async ({ page }) => {
+test('all process IDs select the matching photo and structured prices match visible labels', async ({ page }) => {
   for (const lang of ['en', 'es']) {
     await navigate(page, `/${lang}`)
     const buttons = page.locator('#process ol button')
-    const ids = ['brief', 'scope', 'design', 'build', 'connect', 'launch']
+    const ids = ['brief', 'scope', 'design', 'build', 'launch']
     for (let index = 0; index < ids.length; index++) {
       await buttons.nth(index).click()
       await expect(buttons.nth(index)).toHaveAttribute('aria-current', 'step')
-      await expect(page.locator('#process figure')).toContainText(`kaede.${ids[index]}`)
-      await expect(page.locator('#process svg[role="img"]')).toHaveCount(1)
+      await expect(page.locator('#process .process-layout')).toHaveAttribute('data-stage', ids[index])
+      await expect(buttons.nth(index).locator('.process-stage-label')).toHaveText((await buttons.nth(index).getAttribute('aria-label'))!.replace(/^\d+\. /, ''))
+      await expect.poll(() => page.locator(`#process [data-photo-stage="${ids[index]}"] img`).evaluate(image => (image as HTMLImageElement).naturalWidth > 0)).toBe(true)
     }
     const catalog = await page.locator('script[type="application/ld+json"]').evaluateAll((elements) => {
       const graphs = elements.flatMap((element) => JSON.parse(element.textContent ?? '{}')['@graph'] ?? [])

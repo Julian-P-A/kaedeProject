@@ -11,6 +11,7 @@
  * Options (match the values from the ASCII playground):
  *   --cols 200        characters per row (rows follow the aspect ratio)
  *   --fps 25          output frame rate; frames are interpolated when the source has fewer
+ *   --keyframeInterval 1  all frames seekable for scroll scrubbing; default: codec decides
  *   --speed 1         bake slow/fast motion into the clip (0.5 = half speed). Unlike the
  *                     component's `speed` prop, slow motion stays smooth because the
  *                     missing in-between frames are generated here.
@@ -35,7 +36,7 @@ if (!input || !output) {
   process.exit(1)
 }
 
-const opts = { cols: 200, fps: 0, zoom: 1, focusX: 0.5, focusY: 0.5, mode: 'luminance', threshold: 0.12, max: 1, speed: 1, aspect: 0, invert: false, start: 0, duration: 0 }
+const opts = { cols: 200, fps: 0, keyframeInterval: 0, zoom: 1, focusX: 0.5, focusY: 0.5, mode: 'luminance', threshold: 0.12, max: 1, speed: 1, aspect: 0, invert: false, start: 0, duration: 0 }
 for (let i = 0; i < rest.length; i++) {
   const key = rest[i].replace(/^--/, '')
   if (key === 'invert') opts.invert = true
@@ -103,7 +104,8 @@ const encoders = {
 mkdirSync(dirname(output), { recursive: true })
 for (const [ext, codec] of Object.entries(encoders)) {
   const file = `${output}.${ext}`
-  const ff = spawnSync('ffmpeg', ['-v', 'error', '-y', ...trim, '-i', input, '-an', '-vf', filters, ...codec, file])
+  const keyframes = opts.keyframeInterval > 0 ? ['-g', String(Math.max(1, Math.round(opts.keyframeInterval)))] : []
+  const ff = spawnSync('ffmpeg', ['-v', 'error', '-y', ...trim, '-i', input, '-an', '-vf', filters, ...codec, ...keyframes, file])
   if (ff.status !== 0) {
     console.error(ff.stderr.toString())
     process.exit(1)

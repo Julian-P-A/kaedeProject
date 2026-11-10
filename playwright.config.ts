@@ -15,6 +15,8 @@ export default defineConfig({
   },
   webServer: {
     command: 'npm run dev -- --host 127.0.0.1 --port 3100 --strictPort',
+    // Contact requests are intercepted by the tests; no real key is needed.
+    env: { VITE_WEB3FORMS_ACCESS_KEY: 'playwright-test-key' },
     url: 'http://127.0.0.1:3100/en',
     reuseExistingServer: !process.env.CI,
     timeout: 60000,

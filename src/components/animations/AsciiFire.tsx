@@ -1,5 +1,6 @@
 import { useReducedMotion } from '#/hooks/useReducedMotion'
 import { useEffect, useRef } from 'react'
+import { ASCII_CELL_SIZE, ASCII_FONT_FAMILY, ASCII_MAX_DPR, ASCII_RAMP } from './asciiStyle'
 
 /** Theme colour tokens from coolest (flame tips) to hottest (base). */
 const DEFAULT_PALETTE = ['--color-border-strong', '--color-muted', '--color-accent', '--color-beige']
@@ -13,10 +14,10 @@ const DEFAULT_PALETTE = ['--color-border-strong', '--color-muted', '--color-acce
  */
 export function AsciiFire({
   className,
-  cellSize = 10,
+  cellSize = ASCII_CELL_SIZE,
   fps = 10,
   height = 0.75,
-  ramp = ' .,:;-=+*#%@',
+  ramp = ASCII_RAMP,
   palette = DEFAULT_PALETTE,
 }: {
   className?: string
@@ -49,12 +50,12 @@ export function AsciiFire({
     let last = 0
 
     const layout = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const dpr = Math.min(window.devicePixelRatio || 1, ASCII_MAX_DPR)
       const { clientWidth: w, clientHeight: h } = canvas
       canvas.width = Math.round(w * dpr)
       canvas.height = Math.round(h * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      ctx.font = `${cellSize}px ui-monospace, SFMono-Regular, Menlo, monospace`
+      ctx.font = `${cellSize}px ${ASCII_FONT_FAMILY}`
       ctx.textBaseline = 'top'
       cols = Math.ceil(w / ctx.measureText('M').width)
       rows = Math.ceil(h / cellSize)
