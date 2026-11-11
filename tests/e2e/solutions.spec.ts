@@ -7,7 +7,7 @@ const names = {
 
 for (const lang of ['es', 'en'] as const) {
   for (const width of [1440, 390]) {
-    test(`services follow native scrolling in both directions: ${lang}, ${width}px`, async ({ page }) => {
+    test(`services follow native scrolling in both directions: ${lang}, ${width}px`, async ({ page, browserName }) => {
       const errors: string[] = []
       page.on('pageerror', error => errors.push(error.message))
       await page.setViewportSize({ width, height: 900 })
@@ -18,9 +18,14 @@ for (const lang of ['es', 'en'] as const) {
       const section = page.locator('#solutions')
       const top = await section.evaluate(el => el.getBoundingClientRect().top + scrollY)
       await page.evaluate(top => scrollTo({ top: top + 100, behavior: 'instant' }), top)
+      const scroll = async (amount: number) => {
+        // Playwright cannot send mouse-wheel input to mobile WebKit.
+        if (browserName === 'webkit') await page.evaluate(top => scrollBy({ top, behavior: 'instant' }), amount)
+        else await page.mouse.wheel(0, amount)
+      }
 
       for (let index = 0; index < 4; index++) {
-        if (index) await page.mouse.wheel(0, 900)
+        if (index) await scroll(900)
         await expect(section).toHaveAttribute('data-active-service', String(index + 1))
         const heading = section.getByRole('heading', { level: 3 })
         await expect(heading).toHaveCount(1)
@@ -32,7 +37,7 @@ for (const lang of ['es', 'en'] as const) {
         expect((await section.locator('.solutions-scene').boundingBox())!.y).toBeCloseTo(0, 0)
       }
 
-      await page.mouse.wheel(0, -900)
+      await scroll(-900)
       await expect(section).toHaveAttribute('data-active-service', '3')
       await page.evaluate(top => scrollTo({ top, behavior: 'instant' }), top - 900)
       await expect(section.locator('.solutions-scene')).not.toBeInViewport()

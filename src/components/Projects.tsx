@@ -15,12 +15,12 @@ const ROWS = [
     { id: 'sisteviajes-home', name: 'Sisteviajes' },
   ],
   [
-    { id: 'tuminiu-menu', name: 'TuMiniu' },
-    { id: 'sisteviajes-services', name: 'Sisteviajes' },
-    { id: 'fuego-about', name: 'Fuego E-sports' },
-    { id: 'celestina-shop', name: 'Celestina Cosmetics' },
-    { id: 'kaede-pricing', name: 'Kaede Project' },
-    { id: 'elixir-shop', name: 'Elixir Parfum Colombia' },
+    { id: 'tuminiu-product', name: 'TuMiniu' },
+    { id: 'sisteviajes-destinations', name: 'Sisteviajes' },
+    { id: 'fuego-team', name: 'Fuego E-sports' },
+    { id: 'celestina-brand', name: 'Celestina Cosmetics' },
+    { id: 'kaede-solutions', name: 'Kaede Project' },
+    { id: 'elixir-essence', name: 'Elixir Parfum Colombia' },
   ],
 ]
 

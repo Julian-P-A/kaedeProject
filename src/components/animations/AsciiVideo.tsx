@@ -13,7 +13,7 @@ import { ASCII_CELL_SIZE, ASCII_FONT_FAMILY, ASCII_MAX_DPR, ASCII_RAMP } from '.
  * when browser playback policies prevent the video from starting.
  * `mobileSrc`, if given, replaces it below the `sm` breakpoint (640px), so
  * phones download only their own (typically tighter, coarser) clip.
- * Draws only when the video presents a new frame, pauses while off-screen and
+ * Draws at the clip's frame rate, pauses while off-screen and
  * shows a still frame when the user prefers reduced motion.
  * Text color follows the element's CSS `color`.
  */
@@ -107,6 +107,14 @@ export function AsciiVideo({
     let resizeHandle = 0
     let layoutWidth = 0
     let scatter = new Float32Array(0)
+    let pixels: Uint8ClampedArray | null = null
+    let playbackFrame = -1
+    let playPending = false
+
+    // React sets the muted property; Safari also needs the default muted state
+    // when a source is loaded or playback is retried from a touch gesture.
+    video.defaultMuted = true
+    video.muted = true
 
     const layout = () => {
       const width = canvas.clientWidth
@@ -131,6 +139,7 @@ export function AsciiVideo({
       offsetX = Math.floor((pixelWidth - cols * cellW) / 2)
       sample.canvas.width = cols
       sample.canvas.height = rows
+      pixels = null
       sample.imageSmoothingEnabled = true
       sample.imageSmoothingQuality = 'high'
 
@@ -199,10 +208,18 @@ export function AsciiVideo({
     }
 
     const draw = () => {
-      const frame = video.readyState >= 2 ? video : poster.complete && poster.naturalWidth ? poster : null
-      if (!frame || !cellH || !atlas) return
-      sample.drawImage(frame, 0, 0, cols, rows)
-      const px = sample.getImageData(0, 0, cols, rows).data
+      if (!cellH || !atlas) return
+      // A seek can temporarily discard decoded video data. Keep the last
+      // sampled frame for glyph transitions instead of flashing the poster.
+      const frame = video.readyState >= 2 && !video.seeking
+        ? video
+        : !pixels && poster.complete && poster.naturalWidth ? poster : null
+      if (frame) {
+        sample.drawImage(frame, 0, 0, cols, rows)
+        pixels = sample.getImageData(0, 0, cols, rows).data
+      }
+      if (!pixels) return
+      const px = pixels
       const spread = reduce ? 0 : Math.pow(Math.max(0, Math.min(1, dispersion?.get() ?? 0)), 1.4)
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       for (let y = 0; y < rows; y++) {
@@ -224,20 +241,21 @@ export function AsciiVideo({
       }
     }
 
-    // requestVideoFrameCallback fires once per decoded frame, so a 25 fps clip
-    // costs 25 draws per second regardless of the display refresh rate.
-    const hasRVFC = 'requestVideoFrameCallback' in HTMLVideoElement.prototype
+    // iPhone Safari can withhold video frame callbacks for an invisible source
+    // even while its playhead advances. Follow that playhead on animation frames,
+    // painting at most once per frame of our 30 fps clips.
     const schedule = () => {
-      frameHandle = hasRVFC
-        ? video.requestVideoFrameCallback(onFrame)
-        : requestAnimationFrame(onFrame)
+      frameHandle = requestAnimationFrame(onFrame)
     }
     const cancel = () => {
-      if (hasRVFC) video.cancelVideoFrameCallback(frameHandle)
-      else cancelAnimationFrame(frameHandle)
+      cancelAnimationFrame(frameHandle)
     }
     const onFrame = () => {
-      draw()
+      const next = Math.floor(video.currentTime * 30)
+      if (next !== playbackFrame) {
+        playbackFrame = next
+        draw()
+      }
       schedule()
     }
 
@@ -270,13 +288,19 @@ export function AsciiVideo({
         video.pause()
         syncToProgress()
         requestDraw()
-      } else if (visible && !reduce) {
-        video.play().catch(() => {})
+      } else if (visible && !reduce && !document.hidden) {
+        if (video.paused && !playPending) {
+          playPending = true
+          video.play().catch(() => {}).finally(() => { playPending = false })
+        }
         schedule()
       } else {
         video.pause()
         draw()
       }
+    }
+    const retryPlayback = () => {
+      if (visible && !reduce && !progress && !document.hidden) update()
     }
 
     const observer = new IntersectionObserver(([entry]) => {
@@ -304,6 +328,11 @@ export function AsciiVideo({
     video.addEventListener('loadedmetadata', onReady)
     video.addEventListener('loadeddata', onReady)
     video.addEventListener('seeked', onSeeked)
+    video.addEventListener('canplay', retryPlayback)
+    document.addEventListener('pointerdown', retryPlayback, { passive: true })
+    document.addEventListener('touchend', retryPlayback, { passive: true })
+    document.addEventListener('keydown', retryPlayback)
+    document.addEventListener('visibilitychange', update)
     poster.addEventListener('load', layout)
     poster.src = `${activeSrc}.webp`
     if (video.readyState >= 1) onReady()
@@ -322,6 +351,11 @@ export function AsciiVideo({
       video.removeEventListener('loadedmetadata', onReady)
       video.removeEventListener('loadeddata', onReady)
       video.removeEventListener('seeked', onSeeked)
+      video.removeEventListener('canplay', retryPlayback)
+      document.removeEventListener('pointerdown', retryPlayback)
+      document.removeEventListener('touchend', retryPlayback)
+      document.removeEventListener('keydown', retryPlayback)
+      document.removeEventListener('visibilitychange', update)
     }
   }, [activeSrc, reduce, ramp, cellSize, contrast, gamma, sharpness, progress, dispersion])
 
@@ -338,8 +372,8 @@ export function AsciiVideo({
         aria-hidden="true"
         className="pointer-events-none absolute h-px w-px opacity-0"
       >
-        {activeSrc && <source src={`${activeSrc}.webm`} type="video/webm" />}
         {activeSrc && <source src={`${activeSrc}.mp4`} type="video/mp4" />}
+        {activeSrc && <source src={`${activeSrc}.webm`} type="video/webm" />}
       </video>
     </div>
   )

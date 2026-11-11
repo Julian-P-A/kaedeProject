@@ -9,7 +9,7 @@ export default defineConfig({
     { name: 'chromium' },
     {
       name: 'webkit-iphone',
-      testMatch: '**/ascii-video.spec.ts',
+      testMatch: ['**/ascii-video.spec.ts', '**/mobile-playback.spec.ts', '**/solutions.spec.ts'],
       use: { ...devices['iPhone 13'], browserName: 'webkit', launchOptions: {} },
     },
   ],
