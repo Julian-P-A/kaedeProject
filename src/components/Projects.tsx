@@ -7,6 +7,7 @@ import { WordsReveal } from '#/components/animations/WordsReveal'
 
 const ROWS = [
   [
+    { id: 'tuminiu-home', name: 'TuMiniu' },
     { id: 'fuego-home', name: 'Fuego E-sports' },
     { id: 'celestina-home', name: 'Celestina Cosmetics' },
     { id: 'elixir-home', name: 'Elixir Parfum Colombia' },
@@ -14,6 +15,7 @@ const ROWS = [
     { id: 'sisteviajes-home', name: 'Sisteviajes' },
   ],
   [
+    { id: 'tuminiu-menu', name: 'TuMiniu' },
     { id: 'sisteviajes-services', name: 'Sisteviajes' },
     { id: 'fuego-about', name: 'Fuego E-sports' },
     { id: 'celestina-shop', name: 'Celestina Cosmetics' },

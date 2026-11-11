@@ -467,7 +467,7 @@ h4 {
 .projects-static .projects-scene { position: relative; height: auto; padding-block: 5rem; }
 .projects-static .projects-rows { padding-inline: var(--site-gutter); }
 .projects-static .project-row { display: block; width: 100%; animation: none; transform: none; will-change: auto; }
-.projects-static .project-row-group { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); padding: 0; }
+.projects-static .project-row-group { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); padding: 0; }
 .projects-static .project-shot { width: 100%; height: auto; aspect-ratio: 8 / 5; }
 .projects-static .project-row-duplicate { display: none; }
 
@@ -488,7 +488,7 @@ h4 {
   .process-stages button { width: 44px; justify-content: center; padding-inline: 0; }
   .process-stage-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .process-step-index { gap: 0.25rem; font-size: 0.75rem; letter-spacing: 0.05em; }
-  .projects-static .project-row-group { grid-template-columns: 1fr; }
+  .projects-static .project-row-group { grid-auto-flow: row; grid-template-columns: 1fr; }
 }
 
 @media (max-height: 740px) and (max-width: 63.999rem) {

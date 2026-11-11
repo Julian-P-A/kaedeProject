@@ -193,6 +193,7 @@ test('project title remains visible while rows loop independently of a brief scr
     await expect.poll(async () => (await positions())[1]).toBeGreaterThan(initial[1] + 15)
     await expect(section.locator('img[alt="Sisteviajes"]')).toHaveCount(2)
     await expect(section.locator('img[alt="Elixir Parfum Colombia"]')).toHaveCount(2)
+    await expect(section.locator('img[alt="TuMiniu"]')).toHaveCount(2)
     const heading = (await section.locator('h2').boundingBox())!
     const gallery = (await section.locator('.projects-rows').boundingBox())!
     expect(heading.y).toBeGreaterThanOrEqual(50)
@@ -211,9 +212,14 @@ test('reduced motion shows two screenshots per project and preserves direct proc
       const section = page.locator('#projects')
       await expect(section).toHaveClass(/projects-static/)
       await expect(section.locator('.projects-scene')).toHaveCSS('position', 'relative')
-      await expect(section.locator('.project-shot:visible')).toHaveCount(10)
-      for (const name of ['Fuego E-sports', 'Celestina Cosmetics', 'Kaede Project', 'Sisteviajes', 'Elixir Parfum Colombia']) {
+      await expect(section.locator('.project-shot:visible')).toHaveCount(12)
+      for (const name of ['Fuego E-sports', 'Celestina Cosmetics', 'Kaede Project', 'Sisteviajes', 'Elixir Parfum Colombia', 'TuMiniu']) {
         await expect(section.locator(`img[alt="${name}"]`)).toHaveCount(2)
+      }
+      for (const image of await section.locator('img[alt="TuMiniu"]').all()) {
+        await image.scrollIntoViewIfNeeded()
+        await expect.poll(() => image.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBe(1440)
+        await expect(image).toHaveJSProperty('naturalHeight', 900)
       }
       await expect(section.locator('.project-row').first()).toHaveCSS('animation-name', 'none')
       await expect(page.locator('#process .process-scene')).toHaveCSS('position', 'relative')
