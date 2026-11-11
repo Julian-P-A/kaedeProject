@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 /**
- * Bakes a video into a tiny "ASCII-ready" clip for <AsciiVideo />: background
- * removed, zoom applied and scaled so each pixel is one character. The browser
- * then only maps pixel brightness to a character, with no keying or scaling.
- * Writes <output>.webm (VP9), <output>.mp4 (H.264), and a lossless poster
- * <output>.webp so the artwork is visible before video decoding is available.
- * Requires an ffmpeg build with libvpx-vp9, libx264 and libwebp encoders.
+ * Exports finished ASCII video: prepares a temporary luminance map, then bakes
+ * the glyphs offline with export-ascii.py. The browser only plays the resulting
+ * MP4 or displays its WebP poster. No character generation runs on the site.
+ * Requires FFmpeg (libx264), Python 3, Pillow and NumPy.
  *
  * Usage:
  *   node scripts/ascii-export.mjs <input> <output-without-extension> [options]
@@ -29,11 +27,13 @@
  *   --duration        trim length (seconds, default: whole video)
  */
 import { spawnSync } from 'node:child_process'
-import { mkdirSync, statSync } from 'node:fs'
-import { dirname } from 'node:path'
+import { mkdtempSync, rmSync } from 'node:fs'
+import { dirname, join, resolve } from 'node:path'
+import { tmpdir } from 'node:os'
+import { fileURLToPath } from 'node:url'
 
-const [input, output, ...rest] = process.argv.slice(2)
-if (!input || !output) {
+const [input, finalOutput, ...rest] = process.argv.slice(2)
+if (!input || !finalOutput) {
   console.error('Usage: node scripts/ascii-export.mjs <input> <output-without-extension> [--cols 200] [--fps 25] ...')
   process.exit(1)
 }
@@ -98,30 +98,16 @@ const filters = [
 ].join(',')
 
 const trim = ['-ss', String(opts.start), ...(opts.duration ? ['-t', String(opts.duration)] : [])]
-const encoders = {
-  webm: ['-c:v', 'libvpx-vp9', '-crf', '40', '-b:v', '0', '-row-mt', '1'],
-  mp4: ['-c:v', 'libx264', '-crf', '23', '-preset', 'veryslow', '-tune', 'animation', '-movflags', '+faststart'],
-}
-
-mkdirSync(dirname(output), { recursive: true })
-for (const [ext, codec] of Object.entries(encoders)) {
-  const file = `${output}.${ext}`
+const work = mkdtempSync(join(tmpdir(), 'kaede-ascii-source-'))
+try {
+  const luminance = join(work, 'luminance.mp4')
   const keyframes = opts.keyframeInterval > 0 ? ['-g', String(Math.max(1, Math.round(opts.keyframeInterval)))] : []
-  const ff = spawnSync('ffmpeg', ['-v', 'error', '-y', ...trim, '-i', input, '-an', '-vf', filters, ...codec, ...keyframes, file])
-  if (ff.status !== 0) {
-    console.error(ff.stderr.toString())
-    process.exit(1)
-  }
-  console.log(`${file} · ${cols}×${rows} chars · ${fps} fps · ${(statSync(file).size / 1024).toFixed(0)} KB`)
+  const prepared = spawnSync('ffmpeg', ['-v', 'error', '-y', ...trim, '-i', input, '-an', '-vf', filters,
+    '-c:v', 'libx264', '-crf', '23', '-preset', 'slow', '-movflags', '+faststart', ...keyframes, luminance], { stdio: 'inherit' })
+  if (prepared.status !== 0) throw new Error('Could not prepare the luminance source')
+  const renderer = join(dirname(fileURLToPath(import.meta.url)), 'export-ascii.py')
+  const rendered = spawnSync('python3', [renderer, '--input', luminance, '--output', resolve(finalOutput), '--width', String(cols * 6)], { stdio: 'inherit' })
+  if (rendered.status !== 0) throw new Error('Could not export the final ASCII pixels')
+} finally {
+  rmSync(work, { recursive: true, force: true })
 }
-
-const posterFile = `${output}.webp`
-const poster = spawnSync('ffmpeg', [
-  '-v', 'error', '-y', '-i', `${output}.webm`, '-vf', 'thumbnail=60', '-frames:v', '1', '-an',
-  '-c:v', 'libwebp', '-lossless', '1', '-compression_level', '6', posterFile,
-])
-if (poster.status !== 0) {
-  console.error(poster.stderr.toString())
-  process.exit(1)
-}
-console.log(`${posterFile} · poster · ${(statSync(posterFile).size / 1024).toFixed(0)} KB`)

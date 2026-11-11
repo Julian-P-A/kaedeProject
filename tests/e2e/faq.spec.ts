@@ -15,11 +15,8 @@ for (const lang of ['es', 'en']) {
     await expect(questions).toHaveCount(15)
     await faq.evaluate(el => scrollTo({ top: el.getBoundingClientRect().top + scrollY, behavior: 'instant' }))
     const book = intro.locator('.faq-book')
-    await expect.poll(() => book.locator('canvas').evaluate(el => {
-      const canvas = el as HTMLCanvasElement
-      const pixels = canvas.getContext('2d')!.getImageData(0, 0, canvas.width, canvas.height).data
-      return pixels.some((value, i) => i % 4 !== 3 && value > 0)
-    })).toBe(true)
+    await expect.poll(() => book.locator('.ascii-poster').evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true)
+    await expect(book.locator('canvas')).toHaveCount(0)
     await expect.poll(() => book.locator('video').evaluate(video => (video as HTMLVideoElement).paused)).toBe(true)
     const before = (await intro.boundingBox())!
     const listBefore = (await list.boundingBox())!

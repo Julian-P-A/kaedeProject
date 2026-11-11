@@ -270,6 +270,7 @@ h4 {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  mix-blend-mode: screen;
 }
 
 .solutions-renaissance {
@@ -428,9 +429,11 @@ h4 {
 .process-art { position: relative; grid-column: 2; grid-row: 2; align-self: center; height: var(--process-photo-height); width: min(100%, 33rem); min-width: 0; margin: 0; justify-self: center; }
 .process-photo-layer, .ascii-photo { position: absolute; inset: 0; }
 .ascii-photo { overflow: hidden; border-radius: 1.5rem; }
-.ascii-photo img, .ascii-photo canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
-.ascii-photo img { object-fit: cover; filter: grayscale(1) contrast(1.15) brightness(0.85); mask-image: linear-gradient(105deg, black 25%, rgb(0 0 0 / 80%) 42%, transparent 78%); }
-.ascii-photo canvas { color: var(--color-foreground); mask-image: linear-gradient(105deg, transparent 25%, black 66%); }
+.ascii-photo img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+.ascii-photo-source { filter: grayscale(1) contrast(1.15) brightness(0.85); mask-image: linear-gradient(105deg, black 25%, rgb(0 0 0 / 80%) 42%, transparent 78%); }
+.ascii-photo-render { mask-image: linear-gradient(105deg, transparent 25%, black 66%); }
+.ascii-media { position: relative; }
+.ascii-poster, .ascii-playback { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
 .process-stages { display: flex; flex-direction: column; align-items: start; align-self: end; gap: 0; }
 .process-stages li { max-width: 100%; }
 .process-stages button { display: flex; max-width: 100%; min-height: 36px; align-items: center; gap: 0.85rem; border-radius: 999px; padding: 0.35rem 1rem; color: var(--color-muted); text-align: left; cursor: pointer; transition: color 180ms, background-color 180ms; }

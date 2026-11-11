@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useLanguage } from '#/context/LanguageContext'
 import { WordsReveal } from '#/components/animations/WordsReveal'
 import { AsciiVideo } from '#/components/animations/AsciiVideo'
+import { ASCII_MEDIA } from '#/data/ascii'
 
 export function Faq() {
   const { t } = useLanguage()
@@ -18,7 +19,7 @@ export function Faq() {
           />
           <div className="faq-book" aria-hidden="true">
             {/* The clip includes both directions so looping never resets the playhead visibly. */}
-            <AsciiVideo src="/ascii/faq-book" />
+            <AsciiVideo asset={ASCII_MEDIA.book} />
           </div>
         </div>
 

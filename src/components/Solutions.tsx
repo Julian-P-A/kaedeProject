@@ -3,11 +3,12 @@ import { motion, useMotionValueEvent, useScroll, useSpring, useTransform, type M
 import { useLanguage } from '#/context/LanguageContext'
 import { useReducedMotion } from '#/hooks/useReducedMotion'
 import { AsciiVideo } from '#/components/animations/AsciiVideo'
+import { ASCII_MEDIA } from '#/data/ascii'
 import { WordsReveal } from '#/components/animations/WordsReveal'
 import type { Translations } from '#/data/translations'
 
 const EASE = [0.16, 1, 0.3, 1] as const
-const SERVICE_ARTWORK = ['/ascii/web-architecture', '/ascii/ai-bust', '/ascii/automation-gears', '/ascii/crm-hands'] as const
+const SERVICE_ARTWORK = [ASCII_MEDIA.web, ASCII_MEDIA.ai, ASCII_MEDIA.automation, ASCII_MEDIA.crm] as const
 type Service = Translations['services'][number]
 
 function ServiceCopy({ service }: { service: Service }) {
@@ -30,17 +31,17 @@ function smoothStep(value: number) {
   return clamped * clamped * (3 - 2 * clamped)
 }
 
-function SolutionArtwork({ index, scroll, reduce }: { index: number; scroll: MotionValue<number>; reduce: boolean }) {
+function SolutionArtwork({ index, scroll, reduce, load }: { index: number; scroll: MotionValue<number>; reduce: boolean; load: boolean }) {
   const local = useTransform(scroll, value => value * SERVICE_ARTWORK.length - index)
   const opacity = useTransform(local, value => {
     const entry = index === 0 ? 1 : smoothStep((value + 0.18) / 0.36)
     const exit = index === SERVICE_ARTWORK.length - 1 ? 1 : 1 - smoothStep((value - 0.82) / 0.36)
     return entry * exit
   })
-  const dispersion = useTransform(opacity, value => Math.min(1, (1 - value) * 1.4))
   const progress = useTransform(local, value => {
-    const start = index === 0 ? 0 : 0.18
-    const end = index === SERVICE_ARTWORK.length - 1 ? 1 : 0.82
+    // Entry/exit glyph dispersion is already part of the exported video.
+    const start = index === 0 ? 0 : -0.18
+    const end = index === SERVICE_ARTWORK.length - 1 ? 1 : 1.18
     return Math.max(0, Math.min(1, (value - start) / (end - start)))
   })
 
@@ -48,9 +49,9 @@ function SolutionArtwork({ index, scroll, reduce }: { index: number; scroll: Mot
     <motion.div className="solutions-art-layer" data-artwork={index} style={{ opacity: reduce ? 1 : opacity }}>
       <div className="solutions-renaissance">
         <AsciiVideo
-          src={SERVICE_ARTWORK[index]}
+          asset={SERVICE_ARTWORK[index]}
+          load={load}
           progress={reduce ? undefined : progress}
-          dispersion={reduce ? undefined : dispersion}
           className="w-full text-foreground"
         />
       </div>
@@ -103,7 +104,7 @@ export function Solutions() {
           <div className="solutions-layout">
             <div className="solutions-art" aria-hidden="true">
               {SERVICE_ARTWORK.map((src, index) => (!reduce || index === 0) && (
-                <SolutionArtwork key={src} index={index} scroll={artworkScroll} reduce={reduce} />
+                <SolutionArtwork key={src.src} index={index} scroll={artworkScroll} reduce={reduce} load={Math.abs(index - active) <= 1} />
               ))}
             </div>
             <div id={contentId} className="solutions-copy">

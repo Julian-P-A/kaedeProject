@@ -70,7 +70,7 @@ for (const width of [1440, 390]) {
     const top = await section.evaluate(el => el.getBoundingClientRect().top + scrollY)
     const layer = section.locator('[data-artwork="0"]')
     const video = layer.locator('video')
-    const canvas = layer.locator('canvas')
+    const frame = () => video.screenshot()
     const seekTo = async (offset: number) => {
       await page.evaluate(top => scrollTo({ top, behavior: 'instant' }), top + offset)
       await expect.poll(async () => {
@@ -88,31 +88,31 @@ for (const width of [1440, 390]) {
     await expect(video).toHaveJSProperty('paused', true)
     await expect(video).toHaveJSProperty('seeking', false)
     const firstTime = await video.evaluate((el: HTMLVideoElement) => el.currentTime)
-    const firstFrame = await canvas.evaluate((el: HTMLCanvasElement) => el.toDataURL())
+    const firstFrame = await frame()
     await page.waitForTimeout(300)
     expect(await video.evaluate((el: HTMLVideoElement) => el.currentTime)).toBe(firstTime)
-    expect(await canvas.evaluate((el: HTMLCanvasElement) => el.toDataURL())).toBe(firstFrame)
+    expect((await frame()).equals(firstFrame)).toBe(true)
 
     await seekTo(540)
     await expect.poll(() => video.evaluate((el: HTMLVideoElement) => el.currentTime)).toBeGreaterThan(firstTime + 1)
     await seekTo(225)
     await expect.poll(() => video.evaluate((el: HTMLVideoElement) => el.currentTime)).toBeCloseTo(firstTime, 1)
-    await expect.poll(() => canvas.evaluate((el: HTMLCanvasElement) => el.toDataURL())).toBe(firstFrame)
+    await expect.poll(async () => (await frame()).equals(firstFrame)).toBe(true)
 
-    // The clip has finished here. Changing its pixel positions after this point
-    // proves the transition moves glyphs rather than just fading the element.
+    // The body animation is complete. Its remaining exported frames contain
+    // glyph dispersion, so the native playhead continues through the transition.
     await seekTo(744)
-    await expect.poll(() => video.evaluate((el: HTMLVideoElement) => el.currentTime / el.duration)).toBeGreaterThan(0.98)
+    await expect.poll(() => video.evaluate((el: HTMLVideoElement) => el.currentTime / el.duration)).toBeGreaterThan(0.65)
     await expect(video).toHaveJSProperty('seeking', false)
     const endTime = await video.evaluate((el: HTMLVideoElement) => el.currentTime)
-    const closed = await canvas.evaluate((el: HTMLCanvasElement) => el.toDataURL())
+    const closed = await frame()
     await seekTo(882)
-    await expect.poll(() => canvas.evaluate((el: HTMLCanvasElement) => el.toDataURL())).not.toBe(closed)
-    expect(await video.evaluate((el: HTMLVideoElement) => el.currentTime)).toBeCloseTo(endTime, 2)
+    await expect.poll(async () => (await frame()).equals(closed)).toBe(false)
+    expect(await video.evaluate((el: HTMLVideoElement) => el.currentTime)).toBeGreaterThan(endTime + 0.3)
     await expect(layer).not.toHaveCSS('opacity', '0')
     await expect(section.locator('[data-artwork="1"]')).not.toHaveCSS('opacity', '0')
     await seekTo(744)
-    await expect.poll(() => canvas.evaluate((el: HTMLCanvasElement) => el.toDataURL())).toBe(closed)
+    await expect.poll(async () => (await frame()).equals(closed)).toBe(true)
 
     await seekTo(1350)
     await expect(section).toHaveAttribute('data-active-service', '2')

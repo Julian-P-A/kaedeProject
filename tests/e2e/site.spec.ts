@@ -305,6 +305,8 @@ test('second section sharpens while shrinking in, then blurs and grows as it lea
     await page.setViewportSize({ width, height: 900 })
     await page.emulateMedia({ reducedMotion: 'no-preference' })
     await navigate(page, '/es')
+    await page.evaluate(() => document.fonts.ready)
+    await expect.poll(() => page.locator('.hero-art .ascii-poster').evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true)
     const about = page.locator('#about')
     await expect(page.locator('main > section').nth(1)).toHaveAttribute('id', 'about')
     const geometry = await about.evaluate((element) => ({ top: element.getBoundingClientRect().top + scrollY, height: element.getBoundingClientRect().height }))
@@ -364,7 +366,7 @@ test('mobile footer keeps the legal copy closer to its bounded fire', async ({ p
       const last = paragraphs[paragraphs.length - 1]
       return {
         gap: element.getBoundingClientRect().bottom - last.getBoundingClientRect().bottom,
-        fireHeight: element.querySelector('canvas')!.getBoundingClientRect().height,
+        fireHeight: element.querySelector('.ascii-media')!.getBoundingClientRect().height,
         height: element.getBoundingClientRect().height,
       }
     })
@@ -424,7 +426,7 @@ test('all process IDs select the matching photo and structured prices match visi
       await expect(buttons.nth(index)).toHaveAttribute('aria-current', 'step')
       await expect(page.locator('#process .process-layout')).toHaveAttribute('data-stage', ids[index])
       await expect(buttons.nth(index).locator('.process-stage-label')).toHaveText((await buttons.nth(index).getAttribute('aria-label'))!.replace(/^\d+\. /, ''))
-      await expect.poll(() => page.locator(`#process [data-photo-stage="${ids[index]}"] img`).evaluate(image => (image as HTMLImageElement).naturalWidth > 0)).toBe(true)
+      await expect.poll(() => page.locator(`#process [data-photo-stage="${ids[index]}"] .ascii-photo-source`).evaluate(image => (image as HTMLImageElement).naturalWidth > 0)).toBe(true)
     }
     const catalog = await page.locator('script[type="application/ld+json"]').evaluateAll((elements) => {
       const graphs = elements.flatMap((element) => JSON.parse(element.textContent ?? '{}')['@graph'] ?? [])

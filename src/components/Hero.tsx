@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { useLanguage } from '#/context/LanguageContext'
 import { WordsReveal } from '#/components/animations/WordsReveal'
 import { AsciiVideo } from '#/components/animations/AsciiVideo'
+import { ASCII_MEDIA } from '#/data/ascii'
 import { useReducedMotion } from '#/hooks/useReducedMotion'
 
 export function Hero() {
@@ -71,7 +72,7 @@ export function Hero() {
             aria-hidden="true"
             className="hero-art pointer-events-none relative mt-8 w-full shrink-0 self-center [mask-image:linear-gradient(to_bottom,black_85%,transparent)] lg:absolute lg:-right-[30%] lg:top-[58%] lg:-z-10 lg:mt-0 lg:-translate-y-1/2"
           >
-            <AsciiVideo src="/ascii/creation" eager className="w-full text-foreground opacity-80" />
+            <AsciiVideo asset={ASCII_MEDIA.creation} eager className="w-full text-foreground opacity-80" />
           </div>
           <div
             aria-hidden="true"

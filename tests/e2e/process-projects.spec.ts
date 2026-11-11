@@ -29,12 +29,9 @@ test('process uses loaded photos and ASCII, with every step fitting the pinned s
       await expect(section.locator('.process-layout')).toHaveAttribute('data-stage', id)
       const photo = section.locator(`[data-photo-stage="${id}"]`)
       await expect(photo).toHaveCount(1)
-      await expect.poll(() => photo.locator('img').evaluate(img => (img as HTMLImageElement).complete && (img as HTMLImageElement).naturalWidth > 0)).toBe(true)
-      await expect.poll(() => photo.locator('canvas').evaluate(canvas => {
-        const image = canvas as HTMLCanvasElement
-        const pixels = image.getContext('2d')!.getImageData(0, 0, image.width, image.height).data
-        return pixels.some((value, index) => index % 4 === 3 && value > 0)
-      })).toBe(true)
+      await expect.poll(() => photo.locator('.ascii-photo-source').evaluate(img => (img as HTMLImageElement).complete && (img as HTMLImageElement).naturalWidth > 0)).toBe(true)
+      await expect.poll(() => photo.locator('.ascii-photo-render').evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true)
+      await expect(photo.locator('canvas')).toHaveCount(0)
       const frame = (await section.locator('.process-frame').boundingBox())!
       if (pinned) {
         expect(frame.y).toBeGreaterThanOrEqual(50)

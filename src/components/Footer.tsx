@@ -5,8 +5,6 @@ import { useLanguage } from '#/context/LanguageContext'
 import { AsciiFire } from '#/components/animations/AsciiFire'
 import { CONTACT_EMAIL, CONTACT_PHONE, WHATSAPP_URL } from '#/lib/contact'
 
-const FIRE_PALETTE = ['--color-border-strong', '--color-muted', '--color-foreground']
-
 // TODO: TikTok profile URL not provided yet — replace before launch.
 const SOCIAL_LINKS = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/company/kaedeproject/', Icon: FaLinkedinIn },
@@ -67,7 +65,6 @@ export function Footer({ children }: { children?: ReactNode }) {
 
       {/* A bounded background layer inside the same footer composition. */}
       <AsciiFire
-        palette={FIRE_PALETTE}
         className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 block h-[180px] w-full opacity-60 [mask-image:linear-gradient(to_top,black_30%,transparent)]"
       />
     </footer>
