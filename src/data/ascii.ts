@@ -18,12 +18,12 @@ function clip(name: string, width: number, height: number, mobileWidth: number, 
 }
 
 export const ASCII_MEDIA = {
-  creation: clip('creation', 1440, 810, 720, 406),
-  web: clip('web-architecture', 720, 720, 360, 360),
-  ai: clip('ai-bust', 720, 720, 360, 360),
-  automation: clip('automation-gears', 720, 720, 360, 360),
-  crm: clip('crm-hands', 720, 408, 360, 204),
-  book: clip('faq-book', 720, 544, 480, 362),
-  fire: { src: '/ascii/rendered/fire', width: 1440, height: 180, fps: 12 } satisfies AsciiAsset,
-  field: { src: '/ascii/rendered/field', width: 720, height: 360, fps: 12 } satisfies AsciiAsset,
+  creation: clip('creation', 2880, 1620, 1440, 812),
+  web: clip('web-architecture', 1440, 1440, 720, 720),
+  ai: clip('ai-bust', 1440, 1440, 720, 720),
+  automation: clip('automation-gears', 1440, 1440, 720, 720),
+  crm: clip('crm-hands', 1440, 816, 720, 408),
+  book: clip('faq-book', 1440, 1088, 960, 724),
+  fire: { src: '/ascii/rendered/fire', width: 2880, height: 360, fps: 12 } satisfies AsciiAsset,
+  field: { src: '/ascii/rendered/field', width: 1440, height: 720, fps: 12 } satisfies AsciiAsset,
 }

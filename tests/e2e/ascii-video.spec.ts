@@ -73,6 +73,14 @@ test('responsive exports keep their layout when resizing', async ({ page }) => {
     const art = page.locator('#faq .ascii-media')
     await art.scrollIntoViewIfNeeded()
     await expect.poll(() => art.locator('img').evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true)
+    const raster = await art.locator('img').evaluate((image: HTMLImageElement) => ({
+      width: image.naturalWidth,
+      height: image.naturalHeight,
+      displayWidth: image.getBoundingClientRect().width,
+      displayHeight: image.getBoundingClientRect().height,
+    }))
+    expect(raster.width).toBeGreaterThanOrEqual(Math.floor(raster.displayWidth * 2))
+    expect(raster.height).toBeGreaterThanOrEqual(Math.floor(raster.displayHeight * 2))
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width)
   }
   expect(errors).toEqual([])

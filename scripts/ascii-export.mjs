@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Exports finished ASCII video: prepares a temporary luminance map, then bakes
+ * Exports finished ASCII video: prepares a lossless luminance map, then bakes
  * the glyphs offline with export-ascii.py. The browser only plays the resulting
  * MP4 or displays its WebP poster. No character generation runs on the site.
  * Requires FFmpeg (libx264), Python 3, Pillow and NumPy.
@@ -11,6 +11,7 @@
  * Options (match the values from the ASCII playground):
  *   --cols 200        characters per row (rows follow the aspect ratio)
  *   --fps 25          output frame rate; frames are interpolated when the source has fewer
+ *   --scale 2         Retina raster resolution, independent of character count
  *   --keyframeInterval 1  all frames seekable for scroll scrubbing; default: codec decides
  *   --speed 1         bake slow/fast motion into the clip (0.5 = half speed). Unlike the
  *                     component's `speed` prop, slow motion stays smooth because the
@@ -38,7 +39,7 @@ if (!input || !finalOutput) {
   process.exit(1)
 }
 
-const opts = { cols: 200, fps: 0, keyframeInterval: 0, zoom: 1, focusX: 0.5, focusY: 0.5, mode: 'luminance', threshold: 0.12, max: 1, speed: 1, aspect: 0, invert: false, start: 0, duration: 0 }
+const opts = { cols: 200, fps: 0, scale: 2, keyframeInterval: 0, zoom: 1, focusX: 0.5, focusY: 0.5, mode: 'luminance', threshold: 0.12, max: 1, speed: 1, aspect: 0, invert: false, start: 0, duration: 0 }
 for (let i = 0; i < rest.length; i++) {
   const key = rest[i].replace(/^--/, '')
   if (key === 'invert') opts.invert = true
@@ -94,19 +95,20 @@ const filters = [
   `geq=r='${level}':g='${level}':b='${level}'`,
   ...(speed !== 1 ? [`setpts=PTS/${speed}`] : []),
   fps > effectiveFps ? `minterpolate=fps=${fps}:mi_mode=mci` : `fps=${fps}`,
-  'format=yuv420p',
+  'format=gray',
 ].join(',')
 
 const trim = ['-ss', String(opts.start), ...(opts.duration ? ['-t', String(opts.duration)] : [])]
 const work = mkdtempSync(join(tmpdir(), 'kaede-ascii-source-'))
 try {
-  const luminance = join(work, 'luminance.mp4')
-  const keyframes = opts.keyframeInterval > 0 ? ['-g', String(Math.max(1, Math.round(opts.keyframeInterval)))] : []
+  const luminance = join(work, 'luminance.mkv')
   const prepared = spawnSync('ffmpeg', ['-v', 'error', '-y', ...trim, '-i', input, '-an', '-vf', filters,
-    '-c:v', 'libx264', '-crf', '23', '-preset', 'slow', '-movflags', '+faststart', ...keyframes, luminance], { stdio: 'inherit' })
+    '-c:v', 'ffv1', '-pix_fmt', 'gray', luminance], { stdio: 'inherit' })
   if (prepared.status !== 0) throw new Error('Could not prepare the luminance source')
   const renderer = join(dirname(fileURLToPath(import.meta.url)), 'export-ascii.py')
-  const rendered = spawnSync('python3', [renderer, '--input', luminance, '--output', resolve(finalOutput), '--width', String(cols * 6)], { stdio: 'inherit' })
+  const keyframes = opts.keyframeInterval > 0 ? ['--keyframe-interval', String(Math.max(1, Math.round(opts.keyframeInterval)))] : []
+  const rendered = spawnSync('python3', [renderer, '--input', luminance, '--output', resolve(finalOutput),
+    '--width', String(cols * 4), '--cols', String(cols), '--scale', String(opts.scale), '--fps', String(fps), ...keyframes], { stdio: 'inherit' })
   if (rendered.status !== 0) throw new Error('Could not export the final ASCII pixels')
 } finally {
   rmSync(work, { recursive: true, force: true })

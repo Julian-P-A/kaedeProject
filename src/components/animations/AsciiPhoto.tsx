@@ -5,7 +5,7 @@ export function AsciiPhoto({ src, alt, position = 0.5 }: { src: string; alt: str
   return (
     <div className="ascii-photo">
       <img className="ascii-photo-source" src={src} alt={alt} width={1280} height={1440} loading="lazy" decoding="async" style={{ objectPosition }} />
-      <img className="ascii-photo-render" src={rendered} alt="" aria-hidden="true" width={960} height={1080} loading="lazy" decoding="async" style={{ objectPosition }} />
+      <img className="ascii-photo-render" src={rendered} alt="" aria-hidden="true" width={1920} height={2160} loading="lazy" decoding="async" style={{ objectPosition }} />
     </div>
   )
 }
